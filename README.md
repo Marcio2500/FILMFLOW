@@ -1,21 +1,3 @@
-Projeto: FilmFlow
-
-RELATÓRIO TÉCNICO
-
-• Joybeth Mateus 20241419
-
-• Márcio Quintas - 20241499
-
-• Sávio casimira – 20240896
-
-• Gianni Lopes - 20240593
-
-
-
-
-
-
-
 RELATÓRIO TÉCNICO – FASE 1
 
 Projeto: FilmFlow
