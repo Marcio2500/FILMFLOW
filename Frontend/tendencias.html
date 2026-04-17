@@ -1,1 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIlmflow - Tendências</title>
+</head>
+<body>
+     <h1>Tendências</h1>
+     <a href="index.html">Voltar ao inicio</a>
 
+     <hr>
+
+     <h2>Tendências Nacionais</h2>
+     <p>Os conteúdos em maior crescimento em Portugal.</p>
+
+     <button onclick="carregarTendencias()">Atualizar</button>
+
+     <hr>                  
+
+     <div id="resultado-tendencias"><p>Clica em "Atualizar" para ver as tendências.</p></div>
+
+     <script>
+        function carregarTendencias() {~
+            document.getElementById('resultado-tendencias').innerHTML = 'A carregar tendências...';
+     </script>
+                                                                
+</body>
+</html>
