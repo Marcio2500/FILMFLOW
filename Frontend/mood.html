@@ -52,5 +52,11 @@
                     document.getElementById('resultado-mood').innerHTML = 'Erro ao carregar sugestões.';
                 });
         });
+
+        function saltar() {
+            sessionStorage.setItem('mood', 'Nenhum');
+            window.location.href = 'index.html';
+        }   
+    </script>
 </body>
 </html>
