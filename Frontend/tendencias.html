@@ -30,6 +30,12 @@
                 {id: 3, nome: 'Coimbra'},
                 {id: 4, nome: 'Faro'},
             ];
+
+            const pedidos = regioes.map(r => 
+                fetch(`api/get_tendencias.php?loc=${r.id}`)
+                    .then(res => res.json())
+                    .then(data => ({regiao: r.nome, tendencias: data.tendencias || []}))
+            );
      </script>
                                                                 
 </body>
