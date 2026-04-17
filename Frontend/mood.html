@@ -26,9 +26,31 @@
 
     <h2 id="titulo-resultado"></h2>
     <div id="resultado-mood"></div>
-    
 
 
+    <script>
+        document.getElementById('mood-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const mood = document.querySelectorAll('input[name="mood"]:checked').value;
+            sessionStorage.setItem('mood', mood);
 
+            fetch(`api/get_mood.php?moods=${encodeURIComponent(mood)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.sugestoes || data.sugestoes.length === 0) {
+                        document.getElementById('titulo-resultado').innerHTML = '<p>Sem sugestões para este mood.</p>';
+                        return;
+                    }
+                    let html = '<ul>';
+                    data.sugestoes.forEach(f => {
+                        html += `<li><strong>${f.titulo}</strong> (${f.ano}) - popularidade: ${f.popularidade} - ${f.cidade || 'Nacional'}</li>`;
+                    });
+                    html += '</ul>';
+                    document.getElementById('resultado-mood').innerHTML = html;
+                })
+                .catch(() => {
+                    document.getElementById('resultado-mood').innerHTML = 'Erro ao carregar sugestões.';
+                });
+        });
 </body>
 </html>
