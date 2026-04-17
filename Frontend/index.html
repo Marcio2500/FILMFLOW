@@ -24,6 +24,29 @@
     <hr>
 
     <h2>Filmes em Destaque</h2>
+    <div id="listas-filmes">
+        <p> A carregar filmes...</p>
+    </div>
 
+    <script>
+        fetch('api/get_filmes.php')
+            .then(r => r.json())
+            .then(filmes. => {
+                const div = document.getElementById('listas-filmes');
+                if (!filmes.length === 0) {
+                    div.textContent = 'Nenhum filme encontrado.';
+                    return;
+                }
+                let. html += '<ul>';
+                filmes.forEach(f => {
+                    html += `<li>${filme.titulo}</strong> (${f.ano}) - popularidade: ${f.popularidade} - ${f.cidade || 'Nacional'}</li>`;
+                });\
+                div.innerHTML = html;
+            });
+            .catch(() => {
+                document.getElementById('listas-filmes').innerHTML = 'Erro ao carregar filmes.';
+                
+            });
+            
 </body>
 </html>
