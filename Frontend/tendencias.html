@@ -36,6 +36,29 @@
                     .then(res => res.json())
                     .then(data => ({regiao: r.nome, tendencias: data.tendencias || []}))
             );
+
+            Promise.all(pedidos)
+                .then(resultados => {
+                    let html = '';
+                    resultados.forEach(r => {
+                        html += `<h3>Em ascensão - ${r.regiao}</h3>`;
+                        if (!r.tendencias.length) {
+                            html += '<p>Sem dados.</p>';
+                            return;
+                        }
+                            html += '<ul>';
+                            r.tendencias.forEach(f => {
+                                const sinal = f.cresciemnto_pc > 0 ? '📈' : '📉';
+                                html += `<li><strong>${f.titulo}</strong> - ${f.total_views} views - ${f.sinal}${f.crescimmento_pct}%</li>`;
+                            });
+                            html += '</ul>';
+                        }
+                    });
+                    document.getElementById('resultado-tendencias').innerHTML = html;
+                })
+                .catch(() => {
+                    document.getElementById('resultado-tendencias').innerHTML = 'Erro ao carregar tendências.';
+                });
      </script>
                                                                 
 </body>
