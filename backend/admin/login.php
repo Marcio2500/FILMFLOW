@@ -1,0 +1,50 @@
+<?php
+session_start();
+include_once '../config/db.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email    = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    $stmt = $conn->prepare("SELECT id, nome, password_hash FROM utilizadores WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user   = $result->fetch_assoc();
+    $stmt->close();
+
+    if ($user && password_verify($password, $user['password_hash'])) {
+        $_SESSION['admin_id']   = $user['id'];
+        $_SESSION['admin_nome'] = $user['nome'];
+        header("Location: index.php");
+        exit();
+    } else {
+        $erro = "Credenciais inválidas!";
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>FilmFlow - Login Admin</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-card { background: #2d2d2d; padding: 30px; border-radius: 10px; width: 300px; text-align: center; }
+        input { width: 100%; margin: 10px 0; padding: 10px; border-radius: 5px; border: none; box-sizing: border-box; }
+        button { background: #e50914; color: white; width: 100%; padding: 10px; border: none; cursor: pointer; border-radius: 5px; }
+        .erro { color: #ff6b6b; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>FilmFlow Admin</h2>
+        <?php if (isset($erro)) echo "<p class='erro'>$erro</p>"; ?>
+        <form method="POST">
+            <input type="email"    name="email"    placeholder="Email"         required>
+            <input type="password" name="password" placeholder="Palavra-passe" required>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+</body>
+</html>
