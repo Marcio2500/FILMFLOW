@@ -41,6 +41,11 @@
                     const periodo_val = document.getElementById("select-periodo").value;
 
                     document.getElementById("titulo-top").innerText = 'A carregar...';
+                    
+                    promise.all([
+                        fetch(`api/get_top.php?loc=${idA}`).then(res => res.json()),
+                        fetch(`api/get_top.php?loc=${idB}`).then(res => res.json())
+                    ])
 
                     
             </script>
