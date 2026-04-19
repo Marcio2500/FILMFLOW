@@ -37,13 +37,30 @@
             <script>
                 function carregarTop() {
                     const regiao = document.getElementById("select-regiao").value;
-                    const periodo = document.getElementById("select-periodo").value;
+                    const periodo = document.getElementById("select-periodo").selectdoptions[0].text;
+                    const periodo_val = document.getElementById("select-periodo").value;
 
-                    // Simulação de carregamento dos dados (substituir com chamada real à API)
-                    setTimeout(() => {
-                        document.getElementById("titulo-top").innerText = `Top Filmes - ${regiao} - ${periodo}`;
-                        document.getElementById("resultado-top").innerHTML = `<p>Resultados para a região ${regiao} no período ${periodo}.</p>`;
-                    }, 1000);
+                    document.getElementById("titulo-top").innerText = 'A carregar...';
+
+                    fetch(`api/get_top.php?loc=${regiao}&periodo=${periodo_val}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            const lista = data.tendencias || [];
+
+                            if (!lista.length) {
+                                document.getElementById('resultado-top').innerHTML = '<p>Sem dados para esta região e período.</p>';
+                                return;
+                            }
+                            let html = `<h3>Top em ${periodo} - ${data.regiao}</h3><ul>`;
+                            data.top.forEach(f => {
+                                html += `<li><strong>${f.titulo}</strong> (${f.ano}) - popularidade: ${f.popularidade}</li>`;
+                            });
+                            html += '</ul>';
+                            document.getElementById('resultado-top').innerHTML = html;
+                        })
+                        .catch(() => {
+                            document.getElementById('resultado-top').innerHTML = 'Erro ao carregar top.';
+                        });
                 }
             </script>
 
