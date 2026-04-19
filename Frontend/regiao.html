@@ -55,7 +55,19 @@
                         html += `table border="1" cellpadding=8"><>`;
                         html += `<thead><tr><th>#</th><th>${nomeA} (${periodo})</th><th>${nomeB} (${periodo})</th></tr></thead>`;
                         html += '<tbody>';
-                            
+
+                            const max = Math.max(lista.length, listaB.length);
+                            for(let i = 0; i < max; i++) {
+                                const itemA = listaA[i] ?
+                                const itemB = listaB[i] ?
+
+                                html += '<tr>';
+                                html += `<td>${i + 1}</td>`;
+                                html += `<td>${itemA ? `<strong>${itemA.titulo}</strong> (${itemA.ano}) - popularidade: ${itemA.popularidade}` : '-'}</td>`;
+                                html += `<td>${itemB ? `<strong>${itemB.titulo}</strong> (${itemB.ano}) - popularidade: ${itemB.popularidade}` : '-'}</td>`;
+                                html += '</tr>';
+                            }
+
 
                         
 
