@@ -42,26 +42,7 @@
 
                     document.getElementById("titulo-top").innerText = 'A carregar...';
 
-                    fetch(`api/get_top.php?loc=${regiao}&periodo=${periodo_val}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            const lista = data.tendencias || [];
-
-                            if (!lista.length) {
-                                document.getElementById('resultado-top').innerHTML = '<p>Sem dados para esta região e período.</p>';
-                                return;
-                            }
-                            let html = `<h3>Top em ${periodo} - ${data.regiao}</h3><ul>`;
-                            data.top.forEach(f => {
-                                html += `<li><strong>${f.titulo}</strong> (${f.ano}) - popularidade: ${f.popularidade}</li>`;
-                            });
-                            html += '</ul>';
-                            document.getElementById('resultado-top').innerHTML = html;
-                        })
-                        .catch(() => {
-                            document.getElementById('resultado-top').innerHTML = 'Erro ao carregar dados.';
-                        });
-                }
+                    
             </script>
 
 </body>
