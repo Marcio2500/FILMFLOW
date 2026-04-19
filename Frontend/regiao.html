@@ -71,10 +71,15 @@
 
                                 html += '<h4>Filmes em comum</h4>';
                                 html += emComum.length ? `<ul>${emComum.map(t => `<li>${t}</li>`).join('')}</ul>` : '<p>Nenhum filme em comum.</p>';
-                    
 
+                                document.getElementById('resultado-comparar').innerHTML = html;
+
+                                .cath(() => {
+                                    document.getElementById('resultado-comparar').innerHTML = 'Erro ao carregar dados.';
+                                });
 
                             }
+                            
 
 
                         
