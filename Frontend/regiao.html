@@ -62,11 +62,14 @@
                                 const itemB = listaB[i] ? `${listaB[i].titulo} (${listaB[i].total_views} views)` : '—';
                                 html += `<tr><td>${i + 1}</td><td>${a}</td><td>${b}</td></tr>`;
 
-                                html += '<tr>';
-                                html += `<td>${i + 1}</td>`;
-                                html += `<td>${itemA ? `<strong>${itemA.titulo}</strong> (${itemA.ano}) - popularidade: ${itemA.popularidade}` : '-'}</td>`;
-                                html += `<td>${itemB ? `<strong>${itemB.titulo}</strong> (${itemB.ano}) - popularidade: ${itemB.popularidade}` : '-'}</td>`;
-                                html += '</tr>';
+                                html += '</tbody></table>';
+
+                                // Filmes em comum
+                                const tituloA = listaA.map(f => f.titulo);
+                                const tituloB = listaB.map(f => f.titulo);
+                                const emComum = tituloA.filter(t => tituloB.includes(t));
+
+                                
                             }
 
 
