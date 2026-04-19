@@ -60,6 +60,7 @@
                             for(let i = 0; i < max; i++) {
                                 const itemA = listaA[i] ?`${listaA[i].titulo} (${listaA[i].total_views} views)` : '—';
                                 const itemB = listaB[i] ? `${listaB[i].titulo} (${listaB[i].total_views} views)` : '—';
+                                html += `<tr><td>${i + 1}</td><td>${a}</td><td>${b}</td></tr>`;
 
                                 html += '<tr>';
                                 html += `<td>${i + 1}</td>`;
