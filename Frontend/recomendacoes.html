@@ -22,5 +22,67 @@
         <option value="Triste">Triste</option>
         <option value="Relaxado">Relaxado</option>
     </select>
+    <button onclick="carregarRecomendacoes()">ver recomendações</button>
+
+    <hr>
+
+    <h3>Baseados no teu mood</h3>
+    <div id="resultado"><p>Carregando...</p></div>
+
+    <hr>
+
+    <h3>Mais populares</h3>
+    <div id="resultado-populares"><p>Carregando...</p></div>
+
+    <script>
+        // Mostrar mood guaredado em sessão
+        const moodgaurdado = sessionStorage.getItem('mood');
+        if (moodgaurdado) {
+            document.getElementById('mood-atual').textContent = `O teu mood atual: ${moodgaurdado}`;
+            document.getElementById('select-mood').value = moodgaurdado;
+        }
+
+        function carregarRecomendacoes() {
+            const mood = document.getElementById('select-mood').value;
+            sessionStorage.setItem('mood', mood);
+            fetch(`api/get_mood.php?moods=${encodeURIComponent(mood)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.sugestoes || data.sugestoes.length === 0) {
+                        document.getElementById('resultado').innerHTML = '<p>Sem sugestões para este mood.</p>';
+                        return;
+                    }
+                    let html = '<ul>';
+                    data.sugestoes.forEach(f => {
+                        html += `<li><strong>${f.titulo}</strong> (${f.ano}) - popularidade: ${f.popularidade} - ${f.cidade || 'Nacional'}</li>`;
+                    });
+                    html += '</ul>';
+                    document.getElementById('resultado').innerHTML = html;
+                })
+                .catch(() => {
+                    document.getElementById('resultado').innerHTML = 'Erro ao carregar sugestões.';
+                });
+        }
+
+        function carregarPopulares() {
+            fetch('api/get_populares.php')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.populares || data.populares.length === 0) {
+                        document.getElementById('resultado-populares').innerHTML = '<p>Sem dados de populares.</p>';
+                        return;
+                    }
+                    let html = '<ul>';
+                    data.populares.forEach(f => {
+                        html += `<li><strong>${f.titulo}</strong> (${f.ano}) - popularidade: ${f.popularidade} - ${f.cidade || 'Nacional'}</li>`;
+                    });
+                    html += '</ul>';
+                    document.getElementById('resultado-populares').innerHTML = html;
+                })
+                .catch(() => {
+                    document.getElementById('resultado-populares').innerHTML = 'Erro ao carregar populares.';
+                });
+        }
+    </script>
 </body>
 </html>
