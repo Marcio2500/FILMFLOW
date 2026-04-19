@@ -28,5 +28,32 @@
         <option value="2">Porto</option>
         <option value="3">Coimbra</option>
         <option value="4">Faro</option>
+    </select>
+    <br><br>
+
+    <button onclick="compararCidades()">Comparar</button>
+
+
+    <hr>
+
+    <div id="resultado-comparar"><p>Seleciona duas cidades e clica em "Comparar".</p></div>
+
+    <script>
+        function comparar() {
+            const idA = document.getElementById('select-cidade-a').value;
+            const idB = document.getElementById('select-cidade-b').value;
+            const nomeA = document.getElementById('select-cidade-a').selectedOptions[0].text;
+            const nomeB = document.getElementById('select-cidade-b').selectedOptions[0].text;
+
+            if(idA === idB) {
+                document.getElementById('resultado-comparar').innerHTML = '<p>Escolhe duas cidadesdiferentes.</p>';
+                return;
+            }
+
+            document.getElementById('resultado-comparar').innerHTML = 'A carregar...';
+
+            promise.all
+        }
+    </script>
 </body>
 </html>
