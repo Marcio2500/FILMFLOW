@@ -51,8 +51,47 @@
         document.getElementById('form-registo').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const preferencias = [...document.querySelectorAll('input[name="preferencias"]:checked')].map(el => el.value);
-        }
+            const preferencias = [...document.querySelectorAll('input[name="preferencias"]:checked')].map(el => el.value);~
+            const dados = {
+                nome: document.getElementById('reg-nome').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-password').value,
+                preferencias: preferencias
+            };
+
+            fetch('api/utilizadores.php?registar.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(dados)
+            })
+            .then(r = r.JSON())
+            .then(data => {
+                document.getElemenntById('msg-registo').textContent = data.mensagem || data.console.error();
+            })
+        .catch(() => {
+            document.getElementById('msg-registo').textContent = 'Erro ao criar conta.';
+        });
+        });
+
+        // Login
+        document.getElementById('form-login').addEventListener('submit', function(e){
+            e.preventDefault();
+
+            const dados = {
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-password').value
+            };
+
+            fetch('api/utilizadores.php?login.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(dados)
+            })
+        })
+        
+    
+
+
     </script>
 
 
