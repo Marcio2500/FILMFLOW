@@ -43,7 +43,18 @@
         <input type="password" id="login-password" required><br><br>
 
         <button type="submit">Entrar</button>
-        
+    </form>
+    <p id="msg-login"></p>
+
+    <script>
+        // Registo
+        document.getElementById('form-registo').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const preferencias = [...document.querySelectorAll('input[name="preferencias"]:checked')].map(el => el.value);
+        }
+    </script>
+
 
 </body>
 </html>
