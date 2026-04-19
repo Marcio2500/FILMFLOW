@@ -51,7 +51,12 @@
                         const liata = dadoB.tendencias || [];
 
                         let html = <h3>${nomeA} vs ${nomeB}</h3>;
-                        
+
+                        html += `table border="1" cellpadding=8"><>`;
+                        html += `<thead><tr><th>#</th><th>${nomeA} (${periodo})</th><th>${nomeB} (${periodo})</th></tr></thead>`;
+                        html += '<tbody>';
+                            
+
                         
 
                     
