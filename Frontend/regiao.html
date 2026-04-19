@@ -58,8 +58,8 @@
 
                             const max = Math.max(lista.length, listaB.length);
                             for(let i = 0; i < max; i++) {
-                                const itemA = listaA[i] ?
-                                const itemB = listaB[i] ?
+                                const itemA = listaA[i] ?`${listaA[i].titulo} (${listaA[i].total_views} views)` : '—';
+                                const itemB = listaB[i] ? `${listaB[i].titulo} (${listaB[i].total_views} views)` : '—';
 
                                 html += '<tr>';
                                 html += `<td>${i + 1}</td>`;
