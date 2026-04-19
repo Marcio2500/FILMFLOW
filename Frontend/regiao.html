@@ -27,9 +27,25 @@
             <option value="mes">Este mês</option>
             </select>
 
-            <button
+            <button onclick="carregarTop()">Ver top</button>
 
-        
+            <hr>
+
+            <h3 id="titulo-top"></h3>
+            <div id="resultado-top"><p>Seleciona uma região e clica em "ver top".</p></div>
+
+            <script>
+                function carregarTop() {
+                    const regiao = document.getElementById("select-regiao").value;
+                    const periodo = document.getElementById("select-periodo").value;
+
+                    // Simulação de carregamento dos dados (substituir com chamada real à API)
+                    setTimeout(() => {
+                        document.getElementById("titulo-top").innerText = `Top Filmes - ${regiao} - ${periodo}`;
+                        document.getElementById("resultado-top").innerHTML = `<p>Resultados para a região ${regiao} no período ${periodo}.</p>`;
+                    }, 1000);
+                }
+            </script>
 
 </body>
 </html>
