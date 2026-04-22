@@ -1,25 +1,36 @@
 <?php
 session_start();
-include_once '../config/db.php';
+include("conexao.php");
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email    = trim($_POST['email']);
-    $password = $_POST['password'];
+$erro = "";
+$email = "";
 
-    $stmt = $conn->prepare("SELECT id, nome, password_hash FROM utilizadores WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user   = $result->fetch_assoc();
-    $stmt->close();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email    = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    if ($user && password_verify($password, $user['password_hash'])) {
-        $_SESSION['admin_id']   = $user['id'];
-        $_SESSION['admin_nome'] = $user['nome'];
-        header("Location: index.php");
-        exit();
+    if ($email === '' || $password === '') {
+        $erro = "Preencha o email e a palavra-passe.";
     } else {
-        $erro = "Credenciais inválidas!";
+        $stmt = $mysqli->prepare("SELECT id, nome, ut_password FROM utilizador WHERE ut_email = ?");
+        if ($stmt) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $user   = $result->fetch_assoc();
+            $stmt->close();
+
+            if ($user && password_verify($password, $user['ut_password'])) {
+                $_SESSION['admin_id']   = $user['id'];
+                $_SESSION['admin_nome'] = $user['nome'];
+                header("Location: index.php");
+                exit();
+            }
+        }
+
+        if (empty($erro)) {
+            $erro = "Email ou palavra-passe incorretos.";
+        }
     }
 }
 ?>
@@ -39,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="login-card">
         <h2>FilmFlow Admin</h2>
-        <?php if (isset($erro)) echo "<p class='erro'>$erro</p>"; ?>
+        <?php if (!empty($erro)) echo "<p class='erro'>" . htmlspecialchars($erro) . "</p>"; ?>
         <form method="POST">
-            <input type="email"    name="email"    placeholder="Email"         required>
+            <input type="email" name="email" placeholder="Email" required value="<?= htmlspecialchars($email) ?>">
             <input type="password" name="password" placeholder="Palavra-passe" required>
             <button type="submit">Entrar</button>
         </form>
