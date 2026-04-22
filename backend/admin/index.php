@@ -4,15 +4,17 @@ if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
-include_once '../config/db.php';
+include("conexao.php");
 
 $sql    = "SELECT id, titulo, popularidade FROM conteudos ORDER BY id DESC";
-$result = $conn->query($sql);
+$result = $mysqli->query($sql);
 ?>
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FilmFlow Admin - Gestão de Conteúdos</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: white; padding: 40px; }
@@ -27,6 +29,7 @@ $result = $conn->query($sql);
         .nav-links a { color: #ccc; margin-right: 20px; text-decoration: none; }
     </style>
 </head>
+
 <body>
 <div class="container">
     <h1>FilmFlow | Backoffice</h1>
