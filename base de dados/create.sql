@@ -119,21 +119,3 @@ CREATE TABLE IF NOT EXISTS interacoes_utilizador (
     FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE,
     FOREIGN KEY (conteudo_id)   REFERENCES conteudos(id)    ON DELETE CASCADE
 ) ENGINE=InnoDB;
-
--- -------------------------------------------------------
--- Dados de teste
--- -------------------------------------------------------
-INSERT INTO moods (nome) VALUES ('Alegre'), ('Triste'), ('Tenso'), ('Épico');
-
-INSERT INTO generos (nome) VALUES ('Comédia'), ('Drama'), ('Thriller'), ('Ação'), ('Romance');
-
-INSERT INTO localizacoes (pais, regiao, cidade) VALUES
-    ('Portugal', 'Lisboa',  'Lisboa'),
-    ('Portugal', 'Norte',   'Porto'),
-    ('Portugal', 'Centro',  'Coimbra'),
-    ('Portugal', 'Algarve', 'Faro');
-
-INSERT INTO conteudos (titulo, descricao, ano, popularidade, tendencia_pct) VALUES
-    ('Divertidamente 2', 'Uma viagem pelas emoções.', 2024, 9.5, 34.0),
-    ('Oppenheimer',      'O criador da bomba atómica.', 2023, 8.9, 21.0),
-    ('Pobres Criaturas', 'Uma história surreal e criativa.', 2023, 8.2, 17.0);
