@@ -42,11 +42,11 @@
 
                     document.getElementById("titulo-top").innerText = 'A carregar...';
                     
-                    promise.all([
-                        fetch(`api/get_top.php?loc=${idA}`).then(res => res.json()),
-                        fetch(`api/get_top.php?loc=${idB}`).then(res => res.json())
+                    Promise.all([
+                        fetch(`../backend/api/get_top.php?loc=${idA}`).then(res => res.json()),
+                        fetch(`../backend/api/get_top.php?loc=${idB}`).then(res => res.json())
                     ])
-                    .then(([dadoA, dadoB])=> {
+                    .then(([dadoA, dadoB]) => {
                         const lista = dadoA.tendencias || [];
                         const liata = dadoB.tendencias || [];
 

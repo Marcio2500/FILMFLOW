@@ -52,12 +52,17 @@
 
             document.getElementById('resultado-comparar').innerHTML = 'A carregar...';
 
-            promise.all([
-                fetch(`api/get_cidade.php?loc=${idA}`).then(res => res.json()),
-                fetch(`api/get_cidade.php?loc=${idB}`).then(res => res.json())
+            Promise.all([
+                fetch(`../backend/api/get_cidade.php?loc=${idA}`).then(res => res.json()),
+                fetch(`../backend/api/get_cidade.php?loc=${idB}`).then(res => res.json())
             ])
-            .then(([dadoA, dadoB
-        }
+            .then(([dadoA, dadoB]) => {
+                // Process data
+                document.getElementById('resultado-comparar').innerHTML = 'Dados carregados.';
+            })
+            .catch(() => {
+                document.getElementById('resultado-comparar').innerHTML = 'Erro ao carregar dados.';
+            });
     </script>
 </body>
 </html>

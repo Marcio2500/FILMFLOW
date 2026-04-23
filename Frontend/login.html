@@ -52,26 +52,24 @@
         document.getElementById('form-registo').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const preferencias = [...document.querySelectorAll('input[name="preferencias"]:checked')].map(el => el.value);~
             const dados = {
                 nome: document.getElementById('reg-nome').value,
                 email: document.getElementById('reg-email').value,
-                password: document.getElementById('reg-password').value,
-                preferencias: preferencias
+                senha: document.getElementById('reg-password').value
             };
 
-            fetch('api/utilizadores.php?registar.php', {
+            fetch('../backend/api/registar.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(dados)
             })
-            .then(r = r.JSON())
+            .then(r => r.json())
             .then(data => {
-                document.getElemenntById('msg-registo').textContent = data.mensagem || data.console.error();
+                document.getElementById('msg-registo').textContent = data.mensagem || data.erro;
             })
-        .catch(() => {
-            document.getElementById('msg-registo').textContent = 'Erro ao criar conta.';
-        });
+            .catch(() => {
+                document.getElementById('msg-registo').textContent = 'Erro ao criar conta.';
+            });
         });
 
         // Login
@@ -83,7 +81,7 @@
                 password: document.getElementById('login-password').value
             };
 
-            fetch('api/utilizadores.php?login.php', {
+            fetch('../backend/api/login.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(dados)
@@ -91,13 +89,16 @@
             .then(r => r.json())
             .then(data => {
                 if (data.mensagem){
-                    sessionStorage.setItem('utiliazador', dados.email);
+                    sessionStorage.setItem('utilizador', dados.email);
                     window.location.href = 'index.html';
                 } else {
                     document.getElementById('msg-login').textContent = data.erro;
                 }
-        })
-        .catch(() => {
+            })
+            .catch(() => {
+                document.getElementById('msg-login').textContent = 'Erro ao fazer login.';
+            });
+        });
             document.getElementById('msg-login').textContent = 'Erro ao entrar.';
         });
         });

@@ -1,14 +1,15 @@
 <?php
 
 $host = "localhost";
-$bancodedados = "filmflow_db";
 $user = "root";
-$pass = "root";
+$pass = "";
+$dbname = "filmflow_db";
 
-$mysqli = new mysqli($host, $user, $pass, $bancodedados);
-if ($mysqli->connect_errno) {
-    echo "Falha ao conectar com o banco de dados: ";
-} else {
-    echo "Conexão com o banco de dados bem-sucedida!";
+$conn = new mysqli($host, $user, $pass, $dbname);
+
+if ($conn->connect_error) {
+    die("Erro de conexão: " . $conn->connect_error);
 }
-echo "";
+
+$conn->set_charset("utf8mb4");
+?>

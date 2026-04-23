@@ -20,8 +20,8 @@
      <div id="resultado-tendencias"><p>Clica em "Atualizar" para ver as tendências.</p></div>
 
      <script>
-        function carregarTendencias() {~
-            document.getElementById('resultado-tendencias').innerHTML = 'A carregars...';
+        function carregarTendencias() {
+            document.getElementById('resultado-tendencias').innerHTML = 'A carregar...';
 
             // Carrega tendências de todas as regiões
             const regioes = [
@@ -32,7 +32,7 @@
             ];
 
             const pedidos = regioes.map(r => 
-                fetch(`api/get_tendencias.php?loc=${r.id}`)
+                fetch(`../backend/api/get_trends.php?loc=${r.id}`)
                     .then(res => res.json())
                     .then(data => ({regiao: r.nome, tendencias: data.tendencias || []}))
             );
@@ -46,19 +46,19 @@
                             html += '<p>Sem dados.</p>';
                             return;
                         }
-                            html += '<ul>';
-                            r.tendencias.forEach(f => {
-                                const sinal = f.cresciemnto_pc > 0 ? '📈' : '📉';
-                                html += `<li><strong>${f.titulo}</strong> - ${f.total_views} views - ${f.sinal}${f.crescimmento_pct}%</li>`;
-                            });
-                            html += '</ul>';
-                        }
+                        html += '<ul>';
+                        r.tendencias.forEach(f => {
+                            const sinal = f.crescimento_pct > 0 ? '📈' : '📉';
+                            html += `<li><strong>${f.titulo}</strong> - ${f.total_views} views - ${sinal}${f.crescimento_pct}%</li>`;
+                        });
+                        html += '</ul>';
                     });
                     document.getElementById('resultado-tendencias').innerHTML = html;
                 })
                 .catch(() => {
                     document.getElementById('resultado-tendencias').innerHTML = 'Erro ao carregar tendências.';
                 });
+        }
      </script>
                                                                 
 </body>
