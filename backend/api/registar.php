@@ -13,7 +13,7 @@ $nome = $conn->real_escape_string($data['nome']);
 $email = $conn->real_escape_string($data['email']);
 $senha = password_hash($data['senha'], PASSWORD_DEFAULT);
 
-$sql = "INSERT INTO utilizador (ut_nome, ut_email, ut_password) VALUES ('$nome', '$email', '$senha')";
+$sql = "INSERT INTO utilizadores (nome, email, password_hash) VALUES ('$nome', '$email', '$senha')";
 if ($conn->query($sql)) {
     echo json_encode(['mensagem' => 'Usuário cadastrado com sucesso!']);
 } else {

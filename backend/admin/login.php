@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($email === '' || $password === '') {
         $erro = "Preencha o email e a palavra-passe.";
     } else {
-        $stmt = $mysqli->prepare("SELECT id, nome, ut_password FROM utilizador WHERE ut_email = ?");
+        $stmt = $mysqli->prepare("SELECT id, nome, password_hash FROM utilizadores WHERE email = ?");
         if ($stmt) {
             $stmt->bind_param("s", $email);
             $stmt->execute();
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user   = $result->fetch_assoc();
             $stmt->close();
 
-            if ($user && password_verify($password, $user['ut_password'])) {
+            if ($user && password_verify($password, $user['password_hash'])) {
                 $_SESSION['admin_id']   = $user['id'];
                 $_SESSION['admin_nome'] = $user['nome'];
                 header("Location: index.php");

@@ -13,7 +13,7 @@ if (!$data) {
 $email = $conn->real_escape_string($data['email']);
 $password = $data['password'];
 
-$stmt = $conn->prepare("SELECT id, ut_nome, ut_password FROM utilizador WHERE ut_email = ?");
+$stmt = $conn->prepare("SELECT id, nome, password_hash FROM utilizadores WHERE email = ?");
 if ($stmt) {
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -21,9 +21,9 @@ if ($stmt) {
     $user = $result->fetch_assoc();
     $stmt->close();
 
-    if ($user && password_verify($password, $user['ut_password'])) {
+    if ($user && password_verify($password, $user['password_hash'])) {
         $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_nome'] = $user['ut_nome'];
+        $_SESSION['user_nome'] = $user['nome'];
         echo json_encode(['mensagem' => 'Login bem-sucedido']);
     } else {
         echo json_encode(['erro' => 'Email ou palavra-passe incorretos.']);
