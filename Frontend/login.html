@@ -10,6 +10,8 @@
     
         <a href="index.html">Voltar ao inicio</a>
 
+    <p id="api-status" aria-live="polite">A verificar ligação ao servidor…</p>
+
     <hr>
 
     <h2>Criar conta</h2>
@@ -21,13 +23,13 @@
         <input type="email" id="reg-email" required><br><br>
 
         <label>Password:</label><br>
-        <input type="password" id="reg-password" required><br><br>
+        <input type="password" id="reg-password" minlength="6" required><br><br>
 
         <label>Preferências (opcional):</label><br>
-        <input type="checbox" name="preferencias" value="Alegre"> Alegre<br>
-        <input type="checbox" name="preferencias" value="Tenso"> 
-        <input type="checbox" name="preferencias" value="Triste"> Triste<br>
-        <input type="checbox" name="preferencias" value="Relaxado"> Relaxado<br><br>
+        <input type="checkbox" name="preferencias" value="Alegre"> Alegre<br>
+        <input type="checkbox" name="preferencias" value="Tenso"> Tenso<br>
+        <input type="checkbox" name="preferencias" value="Triste"> Triste<br>
+        <input type="checkbox" name="preferencias" value="Relaxado"> Relaxado<br><br>
 
         <button type="submit">Criar conta</button>
     </form>
@@ -48,27 +50,103 @@
     <p id="msg-login"></p>
 
     <script>
+        // MAMP Pro: Apache + PHP normalmente em :8888. Ajusta o URL se a pasta no htdocs tiver outro nome.
+        // Live Server (VS Code, ex. :5501) só serve HTML estático: o PHP tem de ir ao MAMP, não à mesma porta.
+        const MAMP_PUBLIC_BASE = 'http://localhost:8888/filmflow'; // <-- ajusta se necessário
+        const DEV_STATIC_PORTS = ['5500', '5501', '5502', '3000', '8080', '4173', '5173', '8000'];
+
+        function getApiBase() {
+            if (window.location.protocol === 'file:') {
+                return MAMP_PUBLIC_BASE + '/backend/api';
+            }
+            const port = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
+            if (DEV_STATIC_PORTS.indexOf(String(port)) !== -1) {
+                return MAMP_PUBLIC_BASE + '/backend/api';
+            }
+            return new URL('../backend/api', window.location.href).href;
+        }
+
+        const API_BASE = getApiBase();
+
+        function verificarLigacaoApi() {
+            const el = document.getElementById('api-status');
+            const url = `${API_BASE}/health.php`;
+
+            fetch(url, { method: 'GET', cache: 'no-store' })
+                .then(async (response) => {
+                    const texto = await response.text();
+                    let data;
+                    try {
+                        data = JSON.parse(texto);
+                    } catch {
+                        throw new Error('A API respondeu, mas o formato não é JSON. Confirma que o PHP (Apache) está a servir a pasta do projeto.');
+                    }
+                    if (!response.ok) {
+                        throw new Error(data.erro || 'API ou base de dados indisponível.');
+                    }
+                    return data;
+                })
+                .then((data) => {
+                    if (data.database === 'ok') {
+                        el.textContent = 'Ligação: frontend e backend OK; base de dados acessível.';
+                    } else {
+                        el.textContent = 'Ligação: API responde, mas a base de dados falhou. (' + (data.erro || 'sem detalhe') + ')';
+                    }
+                })
+                .catch((err) => {
+                    el.textContent =
+                        'Sem ligação à API em ' + url +
+                        '. Com Live Server: o HTML fica em :5501, mas o PHP corre no MAMP (ex. :8888). Liga Apache e MySQL no MAMP, confirma ' +
+                        MAMP_PUBLIC_BASE + ' no browser e, se necessário, edita MAMP_PUBLIC_BASE (pasta/URL do projecto).';
+                });
+        }
+
+        verificarLigacaoApi();
+
         // Registo
         document.getElementById('form-registo').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const checkboxes = document.querySelectorAll('input[name="preferencias"]:checked');
+            const preferencias = Array.from(checkboxes).map(cb => cb.value);
+
             const dados = {
                 nome: document.getElementById('reg-nome').value,
                 email: document.getElementById('reg-email').value,
-                senha: document.getElementById('reg-password').value
+                senha: document.getElementById('reg-password').value,
+                preferencias: preferencias
             };
 
-            fetch('../backend/api/registar.php', {
+            fetch(`${API_BASE}/registar.php`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(dados)
             })
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('msg-registo').textContent = data.mensagem || data.erro;
+            .then(async response => {
+                const texto = await response.text();
+                let data;
+
+                try {
+                    data = JSON.parse(texto);
+                } catch (_) {
+                    throw new Error('Resposta inválida do servidor.');
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.erro || 'Erro ao criar conta.');
+                }
+
+                return data;
             })
-            .catch(() => {
-                document.getElementById('msg-registo').textContent = 'Erro ao criar conta.';
+            .then(data => {
+                if (data.erro) {
+                    throw new Error(data.erro);
+                }
+
+                document.getElementById('msg-registo').textContent = data.mensagem || 'Conta criada com sucesso!';
+            })
+            .catch((erro) => {
+                document.getElementById('msg-registo').textContent = erro.message || 'Erro ao criar conta.';
             });
         });
 
@@ -81,12 +159,17 @@
                 password: document.getElementById('login-password').value
             };
 
-            fetch('../backend/api/login.php', {
+            fetch(`${API_BASE}/login.php`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(dados)
             })
-            .then(r => r.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Resposta inválida');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.mensagem){
                     sessionStorage.setItem('utilizador', dados.email);
@@ -98,9 +181,6 @@
             .catch(() => {
                 document.getElementById('msg-login').textContent = 'Erro ao fazer login.';
             });
-        });
-            document.getElementById('msg-login').textContent = 'Erro ao entrar.';
-        });
         });
         
     
