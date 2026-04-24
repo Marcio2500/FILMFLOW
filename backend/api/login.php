@@ -55,4 +55,4 @@ if (password_verify($password, $user['password_hash'])) {
 } else {
     echo json_encode(['erro' => 'Email ou password incorretos']);
 }
-?>
+?>
