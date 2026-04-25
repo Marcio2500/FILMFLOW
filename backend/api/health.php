@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -19,9 +22,8 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 try {
     require_once __DIR__ . '/../config/db.php';
-    if (!$conn->ping()) {
-        throw new RuntimeException('Ligação MySQL inactiva (ping).');
-    }
+    // Test connection
+    $stmt = $conn->query('SELECT 1');
     echo json_encode([
         'ok' => true,
         'api' => 'ok',

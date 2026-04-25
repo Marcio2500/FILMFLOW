@@ -11,14 +11,8 @@ $sql = "SELECT c.id, c.titulo, c.descricao, c.ano, c.popularidade,
         ORDER BY c.popularidade DESC
         LIMIT 20";
 
-$result = $conn->query($sql);
+$stmt = $conn->query($sql);
+$filmes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$filmes = [];
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $filmes[] = $row;
-    }
-}
-
-echo json_encode(['filmes' => $filmes]);
+echo json_encode(['filmes' => $filmes], JSON_UNESCAPED_UNICODE);
 ?>

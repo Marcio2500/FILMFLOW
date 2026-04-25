@@ -24,14 +24,8 @@ $sql = "SELECT c.id, c.titulo, c.descricao, c.ano, c.popularidade,
         LIMIT 20";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param(str_repeat('s', count($mood_list)), ...$mood_list);
-$stmt->execute();
-$result = $stmt->get_result();
+$stmt->execute($mood_list);
+$filmes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$filmes = [];
-while ($row = $result->fetch_assoc()) {
-    $filmes[] = $row;
-}
-
-echo json_encode(['filmes' => $filmes]);
+echo json_encode(['filmes' => $filmes], JSON_UNESCAPED_UNICODE);
 ?>

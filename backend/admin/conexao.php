@@ -1,9 +1,9 @@
 <?php
 
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "filmflow_db";
+$host = getenv('DB_HOST') ?: 'localhost';
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') ?: 'root';
+$dbname = getenv('DB_NAME') ?: 'filmflow_db';
 
 $conn = new mysqli($host, $user, $pass, $dbname);
 

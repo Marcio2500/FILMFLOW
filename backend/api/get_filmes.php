@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 include_once '../config/db.php';
 
 $sql = "SELECT c.id, c.titulo, c.descricao, c.ano, c.popularidade, c.tendencia_pct,
@@ -14,14 +14,14 @@ $sql = "SELECT c.id, c.titulo, c.descricao, c.ano, c.popularidade, c.tendencia_p
         GROUP BY c.id, v.localizacao_id
         ORDER BY c.popularidade DESC";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $filmes = [];
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $filmes[] = $row;
-    }
+while ($row = $result->fetch_assoc()) {
+    $filmes[] = $row;
 }
 
-echo json_encode($filmes);
+echo json_encode($filmes, JSON_UNESCAPED_UNICODE);
 ?>

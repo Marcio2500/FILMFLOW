@@ -71,6 +71,14 @@ RNF3 – Segurança de passwords.
 RNF4 – Tempo de resposta adequado.
 RNF5 – Código modular.
 
+10.Configuração Local
+- Configure o projeto como root do servidor MAMP/MAMP Pro.
+- Certifique-se de que Apache/PHP e MySQL estão ativos.
+- Aceda aos ficheiros pelo browser usando o domínio local (por exemplo: http://localhost:8888/Frontend/login.html ou http://localhost/Frontend/login.html).
+- As credenciais MySQL padrão são `root` / `root`.
+- Importe `base de dados/create.sql` e `base de dados/insert.sql` para criar as tabelas e os dados iniciais.
+- Verifique a API com `backend/api/health.php` para confirmar a conexão com a base de dados.
+
 Conclusão
 O FilmFlow combina organização pessoal e descoberta emocional, oferecendo uma solução
 diferenciadora e tecnicamente viável para gestão de conteúdos audiovisuais.

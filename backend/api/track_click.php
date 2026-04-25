@@ -11,14 +11,12 @@ if ($conteudo_id && $localizacao_id) {
             ON DUPLICATE KEY UPDATE total_views = total_views + 1";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ii", $conteudo_id, $localizacao_id);
 
-    if ($stmt->execute()) {
-        echo json_encode(["status" => "sucesso", "mensagem" => "Estatística registada"]);
+    if ($stmt->execute([$conteudo_id, $localizacao_id])) {
+        echo json_encode(["status" => "sucesso", "mensagem" => "Estatística registada"] , JSON_UNESCAPED_UNICODE);
     } else {
-        echo json_encode(["status" => "erro", "mensagem" => $stmt->error]);
+        echo json_encode(["status" => "erro", "mensagem" => 'Erro a registar clique'], JSON_UNESCAPED_UNICODE);
     }
-    $stmt->close();
 } else {
     http_response_code(400);
     echo json_encode(["status" => "erro", "mensagem" => "Dados incompletos"]);

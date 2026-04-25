@@ -15,14 +15,8 @@ $sql = "SELECT c.id, c.titulo, c.ano, c.popularidade, c.tendencia_pct,
         LIMIT 10";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $loc_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$stmt->execute([$loc_id]);
+$tendencias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$tendencias = [];
-while ($row = $result->fetch_assoc()) {
-    $tendencias[] = $row;
-}
-
-echo json_encode(['tendencias' => $tendencias]);
+echo json_encode(['tendencias' => $tendencias], JSON_UNESCAPED_UNICODE);
 ?>
