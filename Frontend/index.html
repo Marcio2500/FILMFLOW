@@ -29,7 +29,7 @@
     </div>
 
     <script>
-        fetch('../backend/api/get_filmes.php')
+        fetch('http://localhost:8001/get_filmes.php')
             .then(r => r.json())
             .then(filmes => {
                 const div = document.getElementById('listas-filmes');

@@ -1,4 +1,7 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 $dbHost = getenv('DB_HOST') ?: 'localhost';
 $dbUser = getenv('DB_USER') ?: 'root';
 $dbPass = getenv('DB_PASS') ?: 'root';
@@ -6,7 +9,7 @@ $dbName = getenv('DB_NAME') ?: 'filmflow_db';
 
 try {
     $conn = new PDO(
-        "mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4",
+        "mysql:host=$dbHost;port=3306;dbname=$dbName;charset=utf8mb4",
         $dbUser,
         $dbPass,
         [

@@ -32,7 +32,7 @@
             ];
 
             const pedidos = regioes.map(r => 
-                fetch(`../backend/api/get_trends.php?loc=${r.id}`)
+                fetch(`http://localhost:8001/get_trends.php?loc=${r.id}`)
                     .then(res => res.json())
                     .then(data => ({regiao: r.nome, tendencias: data.tendencias || []}))
             );

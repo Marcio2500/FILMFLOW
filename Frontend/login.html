@@ -48,8 +48,9 @@
     <p id="msg-login"></p>
 
     <script>
-        const API_BASE_URL = 'http://127.0.0.1/backend/api';
-        // This frontend must be served from the same Apache/MAMP root at http://127.0.0.1/
+        const API_BASE_URL = 'http://localhost:8001';
+        const REGISTER_API = `${API_BASE_URL}/registar.php`;
+        const LOGIN_API = `${API_BASE_URL}/login.php`;
 
         // Registo
         document.getElementById('form-registo').addEventListener('submit', function(e) {
@@ -61,7 +62,7 @@
                 senha: document.getElementById('reg-password').value
             };
 
-            fetch(`${API_BASE_URL}/registar.php`, {
+            fetch(REGISTER_API, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(dados)
@@ -90,7 +91,7 @@
                 password: document.getElementById('login-password').value
             };
 
-            fetch(`${API_BASE_URL}/login.php`, {
+            fetch(LOGIN_API, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(dados)

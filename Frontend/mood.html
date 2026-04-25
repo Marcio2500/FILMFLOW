@@ -34,7 +34,7 @@
             const mood = document.querySelectorAll('input[name="mood"]:checked').value;
             sessionStorage.setItem('mood', mood);
 
-            fetch(`../backend/api/get_mood.php?moods=${encodeURIComponent(mood)}`)
+            fetch(`http://localhost:8001/get_mood.php?moods=${encodeURIComponent(mood)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (!data.sugestoes || data.sugestoes.length === 0) {

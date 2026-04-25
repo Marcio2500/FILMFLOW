@@ -53,8 +53,8 @@
             document.getElementById('resultado-comparar').innerHTML = 'A carregar...';
 
             Promise.all([
-                fetch(`../backend/api/get_cidade.php?loc=${idA}`).then(res => res.json()),
-                fetch(`../backend/api/get_cidade.php?loc=${idB}`).then(res => res.json())
+                fetch(`http://localhost:8001/get_cidade.php?loc=${idA}`).then(res => res.json()),
+                fetch(`http://localhost:8001/get_cidade.php?loc=${idB}`).then(res => res.json())
             ])
             .then(([dadoA, dadoB]) => {
                 // Process data

@@ -43,8 +43,8 @@
                     document.getElementById("titulo-top").innerText = 'A carregar...';
                     
                     Promise.all([
-                        fetch(`../backend/api/get_top.php?loc=${idA}`).then(res => res.json()),
-                        fetch(`../backend/api/get_top.php?loc=${idB}`).then(res => res.json())
+                        fetch(`http://localhost:8001/get_top.php?loc=${idA}`).then(res => res.json()),
+                        fetch(`http://localhost:8001/get_top.php?loc=${idB}`).then(res => res.json())
                     ])
                     .then(([dadoA, dadoB]) => {
                         const lista = dadoA.tendencias || [];

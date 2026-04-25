@@ -16,12 +16,7 @@ $sql = "SELECT c.id, c.titulo, c.descricao, c.ano, c.popularidade, c.tendencia_p
 
 $stmt = $conn->prepare($sql);
 $stmt->execute();
-$result = $stmt->get_result();
-
-$filmes = [];
-while ($row = $result->fetch_assoc()) {
-    $filmes[] = $row;
-}
+$filmes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 echo json_encode($filmes, JSON_UNESCAPED_UNICODE);
 ?>
