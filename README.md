@@ -7,78 +7,38 @@ Projeto de Desenvolvimento Web Móvel
 - Sávio Casimira - 20240896
 - Gianni Lopes - 20240593
 
-1. Proposta Inicial do Projeto
+FilmFlow
+Este repositório contém o projeto FilmFlow, desenvolvido no âmbito da Unidade Curricular de Projeto da Universidade Europeia / IADE. Este projeto consiste no desenvolvimento de uma aplicação web voltada para a descoberta e organização de conteúdos audiovisuais. A plataforma permite que os utilizadores pesquisem, descubram e organizem filmes e séries num ambiente centralizado, integrando uma API pública de dados cinematográficos. Através de listas pessoais e mecanismos de descoberta inteligente, os utilizadores podem gerir os seus conteúdos de forma eficiente e personalizada. O grande diferencial da plataforma é o mecanismo de Mood-Based Discovery, que sugere filmes e séries com base no estado emocional do utilizador, tornando a experiência de descoberta mais intuitiva e envolvente.
 
-O FilmFlow é uma aplicação web que permite aos utilizadores pesquisar, descobrir e organizar filmes
-e séries num ambiente centralizado. A plataforma integra uma API pública para obtenção de dados
-cinematográficos e disponibiliza funcionalidades de gestão de listas pessoais (“Para Ver”, “Favoritos”
-e “Vistos”), com persistência em base de dados própria.
-O projeto diferencia-se ao introduzir um mecanismo alternativo de descoberta baseado no estado
-emocional do utilizador (Mood-Based Discovery), bem como uma funcionalidade de recomendação
-aleatória (“Surpreende-me”).
 
-2. Enquadramento
-   O consumo de conteúdos audiovisuais encontra-se fragmentado por múltiplas plataformas. Os
-utilizadores guardam recomendações em diferentes locais, o que gera desorganização. O FilmFlow
-propõe uma solução centralizada com descoberta personalizada.
+Documentação
+Toda a documentação detalhada do projeto encontra-se na pasta documentacao, incluindo os materiais já concluídos. A pasta ainda está em desenvolvimento e será atualizada com todos os elementos mencionados abaixo à medida que forem finalizados.
 
-4. Objetivos
-- Integrar pesquisa por título via API pública.
-- Implementar autenticação de utilizadores.
-- Permitir gestão de listas pessoais.
-- Desenvolver descoberta baseada em estado de espírito.
-- Implementar funcionalidade “Surpreende-me”.
-- Garantir persistência de dados em base relacional.
+Descrição completa do projeto
+Objetivos e motivação
+Enquadramento e público-alvo
+Requisitos funcionais e não funcionais
+User Journey
+Arquitetura do sistema
+Mockups e protótipos (Figma)
+Relatórios das fases
+Guiões de teste
+Planeamento e roadmap
 
-4.Público-Alvo
-Estudantes e jovens adultos (16–35 anos) que consomem filmes e séries e procuram organização
-e personalização.
 
-5.Funcionalidade Diferenciadora
-Mood-Based Discovery:
-Permite selecionar um estado emocional (Relaxar, Rir, Emocionar, Suspense, Romântico,
-Aventura) e receber sugestões associadas a géneros específicos.
-Surpreende-me: Geração de recomendação aleatória global ou baseada no mood selecionado.
+Funcionalidades Principais
 
-6.User Journey
-• Login ou registo.
-• Pesquisa por título ou seleção de mood.
-• Visualização de resultados.
-• Consulta de detalhes.
-• Adição à lista pessoal.
-• Marcação como visto.
+Pesquisa por título — integração com API pública de dados cinematográficos
+Listas pessoais — gestão de conteúdos em "Para Ver", "Favoritos" e "Vistos"
+Mood-Based Discovery — sugestões baseadas no estado emocional (Relaxar, Rir, Emocionar, Suspense, Romântico, Aventura)
+Surpreende-me — recomendação aleatória global ou filtrada por mood
+Autenticação de utilizadores — registo e login com persistência de dados
 
-7.Arquitetura
-• Frontend – Interface web responsiva.
-• Backend – API REST própria com lógica de autenticação e gestão de listas.
-• Base de Dados – Armazenamento de utilizadores e conteúdos.
-• API Externa – Fornecimento de dados cinematográficos.
 
-8.Requisitos Funcionais
-RF1 – Registo e autenticação.
-RF2 – Pesquisa por título.
-RF3 – Visualização em grelha.
-RF4 – Visualização de detalhes.
-RF5 – Gestão de listas pessoais.
-RF6 – Alteração/remoção de conteúdos.
-RF7 – Descoberta por mood.
-RF8 – Recomendação aleatória.
+Tecnologias a serem utilizadas para o Desenvolvimento do Projeto
 
-9.Requisitos Não Funcionais
-RNF1 – Interface responsiva.
-RNF2 – Persistência de dados.
-RNF3 – Segurança de passwords.
-RNF4 – Tempo de resposta adequado.
-RNF5 – Código modular.
-
-10.Configuração Local
-- Configure o projeto como root do servidor MAMP/MAMP Pro.
-- Certifique-se de que Apache/PHP e MySQL estão ativos.
-- Aceda aos ficheiros pelo browser usando o domínio local (por exemplo: http://localhost:8888/Frontend/login.html ou http://localhost/Frontend/login.html).
-- As credenciais MySQL padrão são `root` / `root`.
-- Importe `base de dados/create.sql` e `base de dados/insert.sql` para criar as tabelas e os dados iniciais.
-- Verifique a API com `backend/api/health.php` para confirmar a conexão com a base de dados.
-
-Conclusão
-O FilmFlow combina organização pessoal e descoberta emocional, oferecendo uma solução
-diferenciadora e tecnicamente viável para gestão de conteúdos audiovisuais.
+Frontend: HTML, CSS, JavaScript
+Backend: API REST
+Base de Dados: Relacional (SQL)
+Design: Figma
+API Externa: Dados cinematográficos
