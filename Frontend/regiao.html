@@ -36,55 +36,44 @@
 
             <script>
                 function carregarTop() {
-                    const regiao = document.getElementById("select-regiao").value;
-                    const periodo = document.getElementById("select-periodo").selectdoptions[0].text;
-                    const periodo_val = document.getElementById("select-periodo").value;
+        const regiao = document.getElementById("select-regiao").value;
+        const nomeRegiao = document.getElementById("select-regiao").selectedOptions[0].text;
+        const periodo = document.getElementById("select-periodo").value;
 
-                    document.getElementById("titulo-top").innerText = 'A carregar...';
-                    
-                    Promise.all([
-                        fetch(`http://localhost:8001/get_top.php?loc=${idA}`).then(res => res.json()),
-                        fetch(`http://localhost:8001/get_top.php?loc=${idB}`).then(res => res.json())
-                    ])
-                    .then(([dadoA, dadoB]) => {
-                        const lista = dadoA.tendencias || [];
-                        const liata = dadoB.tendencias || [];
+        document.getElementById("titulo-top").innerText = 'A carregar...';
+        document.getElementById("resultado-top").innerHTML = '';
 
-                        let html = <h3>${nomeA} vs ${nomeB}</h3>;
+        fetch(`http://localhost:8001/get_trends.php?loc=${regiao}`)
+            .then(res => res.json())
+            .then(data => {
+                const lista = data.tendencias || [];
 
-                        html += `table border="1" cellpadding=8"><>`;
-                        html += `<thead><tr><th>#</th><th>${nomeA} (${periodo})</th><th>${nomeB} (${periodo})</th></tr></thead>`;
-                        html += '<tbody>';
+                document.getElementById("titulo-top").innerText = `Top em ${nomeRegiao}`;
 
-                            const max = Math.max(lista.length, listaB.length);
-                            for(let i = 0; i < max; i++) {
-                                const itemA = listaA[i] ?`${listaA[i].titulo} (${listaA[i].total_views} views)` : '—';
-                                const itemB = listaB[i] ? `${listaB[i].titulo} (${listaB[i].total_views} views)` : '—';
-                                html += `<tr><td>${i + 1}</td><td>${a}</td><td>${b}</td></tr>`;
+                if (!lista.length) {
+                    document.getElementById("resultado-top").innerHTML = '<p>Sem dados para esta região.</p>';
+                    return;
+                }
 
-                                html += '</tbody></table>';
+                let html = '<table border="1" cellpadding="8"><thead><tr><th>#</th><th>Filme</th><th>Views</th><th>Tendência</th></tr></thead><tbody>';
+                lista.forEach((f, i) => {
+                    const sinal = f.crescimento_pct > 0 ? '📈' : '📉';
+                    html += `<tr>
+                        <td>${i + 1}</td>
+                        <td>${f.titulo}</td>
+                        <td>${f.total_views} views</td>
+                        <td>${sinal} ${f.crescimento_pct}%</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
 
-                                // Filmes em comum
-                                const tituloA = listaA.map(f => f.titulo);
-                                const tituloB = listaB.map(f => f.titulo);
-                                const emComum = tituloA.filter(t => tituloB.includes(t));
-
-                                html += '<h4>Filmes em comum</h4>';
-                                html += emComum.length ? `<ul>${emComum.map(t => `<li>${t}</li>`).join('')}</ul>` : '<p>Nenhum filme em comum.</p>';
-
-                                document.getElementById('resultado-comparar').innerHTML = html;
-
-                                .cath(() => {
-                                    document.getElementById('resultado-comparar').innerHTML = 'Erro ao carregar dados.';
-                                });
-
-                            }
-                            
-
-
-                        
-
-                    
+                document.getElementById("resultado-top").innerHTML = html;
+            })
+            .catch(() => {
+                document.getElementById("resultado-top").innerHTML = '<p>Erro ao carregar dados.</p>';
+            });
+    }
+               
             </script>
 
 </body>
