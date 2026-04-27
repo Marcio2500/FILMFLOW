@@ -31,7 +31,8 @@
     <script>
         document.getElementById('mood-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const mood = document.querySelectorAll('input[name="mood"]:checked').value;
+            const checked = document.querySelectorAll('input[name="mood"]:checked').value;
+            const mood = Array.from(checked).map(el => el.value).join(', ');
             sessionStorage.setItem('mood', mood);
 
             fetch(`http://localhost:8001/get_mood.php?moods=${encodeURIComponent(mood)}`)
