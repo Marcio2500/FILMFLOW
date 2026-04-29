@@ -1,53 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <title>Filmflow flow</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmflow</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Filmflow</h1>
-    <p>Bem-vindo ao filmflow - descobre o que portugal está a ver.</p>
-
-    <hr>
-
-    <h2>Navegação</h2\>
-    <ul>
-        <li><a href="login.html">Registo / login</a></li>
-        <li><a href="tendencias.html">Tendências Nacionais</a></li>
-        <li><a href="mood.html">Escolher mood</a></li>
-        <li><a href="regiao.html">Top por região</a></li>
-        <li><a href="comparar.html">Comparar cidades</a></li>
-        <li><a href="recomendacoes.html">Recomendações</a></li>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">Filmflow</a>
+    <ul class="navbar-links">
+      <li><a href="tendencias.html">Tendências</a></li>
+      <li><a href="mood.html">Mood</a></li>
+      <li><a href="regiao.html">Por Região</a></li>
+      <li><a href="comparar.html">Comparar</a></li>
+      <li><a href="recomendacoes.html">Recomendações</a></li>
     </ul>
+    <div class="navbar-spacer"></div>
+    <a href="login.html" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.9rem;">Entrar</a>
+  </nav>
 
-    <hr>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow"> O que Portugal está a ver</p>
+      <h1 class="hero-title">Descobre o que<br>está em alta</h1>
+      <p class="hero-sub">Tendências reais, por cidade, por mood — atualizado diariamente.</p>
+      <div class="hero-actions">
+        <a href="tendencias.html" class="btn btn-primary">Ver Tendências</a>
+        <a href="mood.html" class="btn btn-ghost">Escolher Mood</a>
+      </div>
+    </div>
+  </div>
 
-    <h2>Filmes em Destaque</h2>
-    <div id="listas-filmes">
-        <p> A carregar filmes...</p>
+  <!-- CONTEÚDO -->
+  <main class="page">
+    <div class="page-header">
+      <h1>Filmes em Destaque</h1>
+      <p>Os mais vistos em Portugal agora</p>
     </div>
 
-    <script>
-        fetch('http://localhost:8001/get_filmes.php')
-            .then(r => r.json())
-            .then(filmes => {
-                const div = document.getElementById('listas-filmes');
-                if (filmes.length === 0) {
-                    div.textContent = 'Nenhum filme encontrado.';
-                    return;
-                }
-                let html = '<ul>';
-                filmes.forEach(f => {
-                    html += `<li><strong>${f.titulo}</strong> (${f.ano}) - popularidade: ${f.popularidade} - ${f.cidade || 'Nacional'}</li>`;
-                });
-                html += '</ul>';
-                div.innerHTML = html;
-            })
-            .catch(() => {
-                document.getElementById('listas-filmes').innerHTML = 'Erro ao carregar filmes.';
-            });
-    </script>
-            
+    <div class="film-list" id="listas-filmes">
+      <div class="loading">A carregar filmes...</div>
+    </div>
+  </main>
+
+  <style>
+    .hero {
+      background: linear-gradient(180deg, rgba(229,24,27,0.08) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+    .hero-inner { max-width: 560px; margin: 0 auto; }
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 8vw, 5rem);
+      letter-spacing: 3px;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .hero-sub {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+    .hero-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+  </style>
+
+  <script>
+    const FILMES_MOCK = [
+      { titulo: 'Oppenheimer',    ano: 2023, popularidade: 98, cidade: 'Lisboa'   },
+      { titulo: 'Dune: Part Two', ano: 2024, popularidade: 94, cidade: 'Porto'    },
+      { titulo: 'Alien: Romulus', ano: 2024, popularidade: 89, cidade: 'Nacional' },
+      { titulo: 'Gladiador II',   ano: 2024, popularidade: 85, cidade: 'Coimbra'  },
+      { titulo: 'Poor Things',    ano: 2023, popularidade: 78, cidade: 'Nacional' },
+    ];
+
+    function renderFilmes(filmes) {
+      const div = document.getElementById('listas-filmes');
+      if (!filmes.length) { div.innerHTML = '<p class="loading">Nenhum filme encontrado.</p>'; return; }
+      div.innerHTML = filmes.map((f, i) => `
+        <div class="film-item">
+          <span class="film-rank">${i + 1}</span>
+          <div class="film-thumb"></div>
+          <div class="film-info">
+            <div class="film-title">${f.titulo}</div>
+            <div class="film-meta">${f.ano} · ${f.cidade}</div>
+          </div>
+          <div class="film-bar-wrap">
+            <div class="film-bar-bg">
+              <div class="film-bar-fill" style="width:${f.popularidade}%"></div>
+            </div>
+            <div class="film-pop">${f.popularidade}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Tenta API real, cai nos dados mock se falhar
+    fetch('http://localhost:8001/get_filmes.php')
+      .then(r => r.json())
+      .then(filmes => renderFilmes(filmes))
+      .catch(() => renderFilmes(FILMES_MOCK));
+  </script>
+
 </body>
 </html>
