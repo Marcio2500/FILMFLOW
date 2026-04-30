@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmflow — Mapa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="mapa.html" class="navbar-logo">Filmflow</a>
+    <ul class="navbar-links">
+      <li><a href="mapa.html" class="active">Mapa</a></li>
+      <li><a href="tendencias.html">Tendências</a></li>
+      <li><a href="recomendacoes.html">Recomendações</a></li>
+    </ul>
+    <div class="navbar-spacer"></div>
+    <a href="login.html" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.9rem;">Entrar</a>
+  </nav>
+
+  <!-- MAPA + PAINEL -->
+  <div class="mapa-layout">
+    <div class="mapa-side">
+      <div class="mapa-label">
+        <h2>Portugal em Alta</h2>
+        <p>Clica numa cidade para ver o que está em alta</p>
+      </div>
+      <svg id="mapa-svg" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
+        <path d="M80,10 L110,8 L130,15 L145,25 L148,40 L142,55 L150,70 L155,90 L150,110 L158,130 L160,150 L155,165 L160,180 L158,200 L152,215 L155,230 L150,250 L145,265 L140,280 L130,295 L120,310 L108,320 L95,325 L82,318 L70,305 L62,290 L58,275 L55,260 L50,245 L48,228 L52,212 L50,195 L48,178 L52,162 L50,145 L48,128 L52,112 L50,95 L48,78 L52,62 L55,48 L62,32 L72,18 Z" fill="#141417" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- PAINEL LATERAL -->
+    <div class="painel" id="painel">
+      <div class="painel-empty" id="painel-empty">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(242,239,234,0.12)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        <p>Clica numa cidade<br>para ver o que está em alta</p>
+      </div>
+      <div id="painel-content" style="display:none">
+        <div class="painel-city" id="painel-city"></div>
+        <div class="painel-count" id="painel-count"></div>
+        <div class="divider" style="margin: 1rem 0"></div>
+        <div class="film-list" id="painel-films"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RANKINGS POR REGIÃO -->
+  <div class="page">
+    <div class="rankings-header">
+      <h2 class="section-title" style="font-size:1.4rem;">Top por Região</h2>
+      <div class="rankings-scroll-wrap">
+        <div class="rankings-scroll" id="rankings-scroll"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* LAYOUT MAPA */
+    .mapa-layout {
+      display: flex;
+      height: calc(100vh - 56px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mapa-side {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .mapa-label {
+      position: absolute;
+      top: 1.5rem;
+      left: 2rem;
+    }
+
+    .mapa-label h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      color: var(--text);
+    }
+
+    .mapa-label p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 0.2rem;
+    }
+
+    #mapa-svg {
+      width: 280px;
+      height: auto;
+    }
+
+    /* CIDADE DOT */
+    .city-dot { cursor: pointer; }
+    .city-dot circle.ring1 {
+      animation: pulse-ring 2s ease-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    .city-dot circle.ring2 {
+      animation: pulse-ring2 2s ease-out infinite 0.4s;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    .city-dot circle.core { transition: r 0.15s; }
+    .city-dot:hover circle.core { r: 6; }
+    .city-dot.selected circle.core { fill: #fff; }
+    .city-dot.selected circle.ring1 { stroke: rgba(255,255,255,0.4); }
+    .city-label {
+      font-size: 8px;
+      fill: rgba(242,239,234,0.35);
+      font-family: 'Outfit', sans-serif;
+      pointer-events: none;
+    }
+
+    @keyframes pulse-ring  { 0%{transform:scale(0.5);opacity:0.6} 100%{transform:scale(2.4);opacity:0} }
+    @keyframes pulse-ring2 { 0%{transform:scale(0.5);opacity:0.35} 100%{transform:scale(3);opacity:0} }
+
+    /* PAINEL */
+    .painel {
+      width: 300px;
+      background: #0f0f14;
+      border-left: 1px solid var(--border);
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .painel-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .painel-city {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .painel-count {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.3rem;
+    }
+
+    /* RANKINGS */
+    .rankings-header { margin-bottom: 1rem; }
+    .rankings-scroll-wrap { overflow-x: auto; padding-bottom: 1rem; }
+    .rankings-scroll-wrap::-webkit-scrollbar { height: 4px; }
+    .rankings-scroll-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius:2px; }
+
+    .rankings-scroll {
+      display: flex;
+      gap: 1rem;
+      width: max-content;
+    }
+
+    .rank-col {
+      width: 200px;
+      flex-shrink: 0;
+    }
+
+    .rank-col-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      color: var(--red);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(229,24,27,0.2);
+    }
+
+    .rank-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .rank-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--text-muted);
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .rank-info { flex: 1; min-width: 0; }
+    .rank-name { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rank-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
+    .rank-bar-bg { height: 2px; background: rgba(255,255,255,0.06); border-radius: 1px; margin-top: 4px; }
+    .rank-bar-fill { height: 2px; background: var(--red); border-radius: 1px; }
+  </style>
+
+  <script>
+    const CIDADES = [
+      { id:'viana',    nome:'Viana do Castelo', cx:72,  cy:38,  r:4   },
+      { id:'braga',    nome:'Braga',            cx:84,  cy:58,  r:4   },
+      { id:'porto',    nome:'Porto',            cx:74,  cy:82,  r:5.5 },
+      { id:'aveiro',   nome:'Aveiro',           cx:76,  cy:112, r:4   },
+      { id:'coimbra',  nome:'Coimbra',          cx:90,  cy:148, r:4   },
+      { id:'leiria',   nome:'Leiria',           cx:82,  cy:178, r:4   },
+      { id:'santarem', nome:'Santarém',         cx:85,  cy:210, r:4   },
+      { id:'lisboa',   nome:'Lisboa',           cx:66,  cy:248, r:6.5 },
+      { id:'setubal',  nome:'Setúbal',          cx:72,  cy:272, r:4   },
+      { id:'evora',    nome:'Évora',            cx:108, cy:268, r:4   },
+      { id:'portalegre',nome:'Portalegre',      cx:120, cy:220, r:4   },
+      { id:'castelo',  nome:'Castelo Branco',   cx:110, cy:185, r:4   },
+      { id:'guarda',   nome:'Guarda',           cx:118, cy:148, r:4   },
+      { id:'viseu',    nome:'Viseu',            cx:98,  cy:118, r:4   },
+      { id:'braganca', nome:'Bragança',         cx:130, cy:55,  r:4   },
+      { id:'vreal',    nome:'Vila Real',        cx:108, cy:80,  r:4   },
+      { id:'beja',     nome:'Beja',             cx:104, cy:305, r:4   },
+      { id:'faro',     nome:'Faro',             cx:100, cy:345, r:4   },
+    ];
+
+    const FILMES_MOCK = {
+      lisboa:    [{t:'Oppenheimer',y:'2023',g:'Drama · História',p:98,c:32},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:94,c:28},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:89,c:21},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:85,c:18}],
+      porto:     [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:95,c:22},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:88,c:25},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:80,c:14}],
+      braga:     [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:90,c:22},{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:75,c:15},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:68,c:9}],
+      coimbra:   [{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:85,c:19},{t:'Oppenheimer',y:'2023',g:'Drama · História',p:78,c:13},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:65,c:5}],
+      faro:      [{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:88,c:20},{t:'Oppenheimer',y:'2023',g:'Drama · História',p:82,c:15},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:70,c:9}],
+      aveiro:    [{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:78,c:11},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:70,c:6}],
+      leiria:    [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:76,c:16},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:68,c:10}],
+      setubal:   [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:80,c:17},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:65,c:6}],
+      evora:     [{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:74,c:12},{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:66,c:8}],
+      beja:      [{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:70,c:14},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:62,c:7}],
+      viana:     [{t:'Oppenheimer',y:'2023',g:'Drama · História',p:82,c:12},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:71,c:8}],
+      santarem:  [{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:75,c:13},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:68,c:9}],
+      portalegre:[{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:65,c:7},{t:'Oppenheimer',y:'2023',g:'Drama · História',p:58,c:5}],
+      castelo:   [{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:67,c:9},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:60,c:6}],
+      guarda:    [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:63,c:8},{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:55,c:4}],
+      viseu:     [{t:'Oppenheimer',y:'2023',g:'Drama · História',p:72,c:10},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:65,c:7}],
+      braganca:  [{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:60,c:9},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:55,c:5}],
+      vreal:     [{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:68,c:8},{t:'Oppenheimer',y:'2023',g:'Drama · História',p:62,c:6}],
+    };
+
+    // Render cidades no SVG
+    const svg = document.getElementById('mapa-svg');
+    CIDADES.forEach(c => {
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('class', 'city-dot');
+      g.dataset.id = c.id;
+      g.dataset.nome = c.nome;
+      g.innerHTML = `
+        <circle cx="${c.cx}" cy="${c.cy}" r="${c.r * 2.5}" fill="rgba(229,24,27,0.06)" class="ring2" stroke="rgba(229,24,27,0.25)" stroke-width="1"/>
+        <circle cx="${c.cx}" cy="${c.cy}" r="${c.r * 2.5}" fill="none" class="ring1" stroke="rgba(229,24,27,0.45)" stroke-width="1"/>
+        <circle cx="${c.cx}" cy="${c.cy}" r="${c.r}" fill="#e5181b" class="core"/>
+        <text x="${c.cx + c.r + 3}" y="${c.cy + 3}" class="city-label">${c.nome.split(' ')[0]}</text>
+      `;
+      g.addEventListener('click', () => selectCidade(c.id, c.nome));
+      svg.appendChild(g);
+    });
+
+    function selectCidade(id, nome) {
+      // Reset selected
+      document.querySelectorAll('.city-dot').forEach(d => d.classList.remove('selected'));
+      document.querySelector(`[data-id="${id}"]`).classList.add('selected');
+
+      const filmes = FILMES_MOCK[id] || [];
+      const max = filmes[0]?.p || 100;
+
+      document.getElementById('painel-empty').style.display = 'none';
+      document.getElementById('painel-content').style.display = 'block';
+      document.getElementById('painel-city').textContent = nome;
+      document.getElementById('painel-count').textContent = filmes.length + ' títulos em alta';
+
+      const container = document.getElementById('painel-films');
+      container.innerHTML = filmes.map((f, i) => {
+        const trending = f.c > 20
+          ? '<span class="badge badge-red">🔥 Hot</span>'
+          : f.c > 10
+          ? '<span class="badge badge-purp">↑ Trending</span>'
+          : '';
+        const growth = f.c > 0
+          ? `<span class="film-growth growth-up">+${f.c}%</span>`
+          : `<span class="film-growth growth-down">${f.c}%</span>`;
+        return `
+          <div class="film-sticker" id="fs-${i}">
+            <div class="film-top-row">
+              <span class="film-name">${f.t}</span>
+              <div style="display:flex;gap:4px">${trending}</div>
+            </div>
+            <div class="film-genre">${f.y} · ${f.g}</div>
+            <div class="film-bar-row">
+              <div class="film-bar-bg"><div class="film-bar-fill" id="bar-${i}"></div></div>
+              ${growth}
+            </div>
+          </div>`;
+      }).join('');
+
+      // Animar entrada
+      filmes.forEach((f, i) => {
+        setTimeout(() => {
+          const s = document.getElementById('fs-' + i);
+          if (s) s.classList.add('visible');
+          setTimeout(() => {
+            const b = document.getElementById('bar-' + i);
+            if (b) b.style.width = Math.round(f.p / max * 100) + '%';
+          }, 80);
+        }, i * 100);
+      });
+
+      // Tentar API real
+      fetch(`http://localhost:8001/get_trends.php?loc=${id}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.tendencias && data.tendencias.length > 0) {
+            // substituir mock com dados reais quando API estiver ativa
+          }
+        })
+        .catch(() => {});
+    }
+
+    // Render rankings
+    const rankCidades = ['lisboa', 'porto', 'coimbra', 'faro', 'braga', 'aveiro', 'setubal', 'evora', 'beja', 'viana', 'leiria', 'santarem', 'viseu', 'guarda', 'castelo', 'portalegre', 'vreal', 'braganca'];
+    const rankNomes   = ['Lisboa', 'Porto', 'Coimbra', 'Faro', 'Braga', 'Aveiro', 'Setúbal', 'Évora', 'Beja', 'Viana do Castelo', 'Leiria', 'Santarém', 'Viseu', 'Guarda', 'Castelo Branco', 'Portalegre', 'Vila Real', 'Bragança'];
+
+    const scroll = document.getElementById('rankings-scroll');
+    rankCidades.forEach((id, idx) => {
+      const filmes = FILMES_MOCK[id] || [];
+      const max = filmes[0]?.p || 100;
+      const col = document.createElement('div');
+      col.className = 'rank-col';
+      col.innerHTML = `
+        <div class="rank-col-title">${rankNomes[idx]}</div>
+        ${filmes.slice(0, 3).map((f, i) => `
+          <div class="rank-item">
+            <span class="rank-num">${i + 1}</span>
+            <div class="rank-info">
+              <div class="rank-name">${f.t}</div>
+              <div class="rank-meta">${f.g} · ${f.y}</div>
+              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${Math.round(f.p / max * 100)}%"></div></div>
+            </div>
+          </div>`).join('')}
+      `;
+      scroll.appendChild(col);
+    });
+  </script>
+
+</body>
+</html>

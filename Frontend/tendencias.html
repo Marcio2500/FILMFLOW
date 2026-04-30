@@ -1,65 +1,342 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <title>FIlmflow - Tendências</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmflow — Tendências</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-     <h1>Tendências</h1>
-     <a href="index.html">Voltar ao inicio</a>
 
-     <hr>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="mapa.html" class="navbar-logo">Filmflow</a>
+    <ul class="navbar-links">
+      <li><a href="mapa.html">Mapa</a></li>
+      <li><a href="tendencias.html" class="active">Tendências</a></li>
+      <li><a href="recomendacoes.html">Recomendações</a></li>
+    </ul>
+    <div class="navbar-spacer"></div>
+    <a href="login.html" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.9rem;">Entrar</a>
+  </nav>
 
-     <h2>Tendências Nacionais</h2>
-     <p>Os conteúdos em maior crescimento em Portugal.</p>
+  <main class="page">
 
-     <button onclick="carregarTendencias()">Atualizar</button>
+    <!-- TENDÊNCIAS -->
+    <div class="page-header">
+      <h1>Tendências Nacionais</h1>
+      <p>Os conteúdos em maior crescimento em Portugal agora</p>
+    </div>
 
-     <hr>                  
+    <div class="tend-filter">
+      <button class="filter-btn active" onclick="filtrar(this, 'todos')">Todos</button>
+      <button class="filter-btn" onclick="filtrar(this, 'hot')">🔥 Hot</button>
+      <button class="filter-btn" onclick="filtrar(this, 'trending')">↑ Trending</button>
+      <button class="filter-btn" onclick="filtrar(this, 'descida')">↓ A descer</button>
+    </div>
 
-     <div id="resultado-tendencias"><p>Clica em "Atualizar" para ver as tendências.</p></div>
+    <div class="tend-grid" id="tend-grid"></div>
 
-     <script>
-        function carregarTendencias() {
-            document.getElementById('resultado-tendencias').innerHTML = 'A carregar...';
+    <div class="divider"></div>
 
-            // Carrega tendências de todas as regiões
-            const regioes = [
-                {id: 1, nome: 'Lisboa'},
-                {id: 2, nome: 'Porto'},
-                {id: 3, nome: 'Coimbra'},
-                {id: 4, nome: 'Faro'},
-            ];
+    <!-- COMPARAR -->
+    <div class="page-header" style="margin-bottom:1.5rem">
+      <h1>Comparar Cidades</h1>
+      <p>Escolhe duas cidades e compara o que estão a ver</p>
+    </div>
 
-            const pedidos = regioes.map(r => 
-                fetch(`http://localhost:8001/get_trends.php?loc=${r.id}`)
-                    .then(res => res.json())
-                    .then(data => ({regiao: r.nome, tendencias: data.tendencias || []}))
-            );
+    <div class="comparar-selectors">
+      <div class="comparar-select-wrap">
+        <label class="field-label">Cidade A</label>
+        <select class="select" id="sel-a">
+          <option value="lisboa">Lisboa</option>
+          <option value="porto">Porto</option>
+          <option value="coimbra">Coimbra</option>
+          <option value="braga">Braga</option>
+          <option value="faro">Faro</option>
+          <option value="aveiro">Aveiro</option>
+          <option value="setubal">Setúbal</option>
+          <option value="evora">Évora</option>
+        </select>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="comparar-select-wrap">
+        <label class="field-label">Cidade B</label>
+        <select class="select" id="sel-b">
+          <option value="porto">Porto</option>
+          <option value="lisboa">Lisboa</option>
+          <option value="coimbra">Coimbra</option>
+          <option value="braga">Braga</option>
+          <option value="faro">Faro</option>
+          <option value="aveiro">Aveiro</option>
+          <option value="setubal">Setúbal</option>
+          <option value="evora">Évora</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="comparar()">Comparar</button>
+    </div>
 
-            Promise.all(pedidos)
-                .then(resultados => {
-                    let html = '';
-                    resultados.forEach(r => {
-                        html += `<h3>Em ascensão - ${r.regiao}</h3>`;
-                        if (!r.tendencias.length) {
-                            html += '<p>Sem dados.</p>';
-                            return;
-                        }
-                        html += '<ul>';
-                        r.tendencias.forEach(f => {
-                            const sinal = f.crescimento_pct > 0 ? '📈' : '📉';
-                            html += `<li><strong>${f.titulo}</strong> - ${f.total_views} views - ${sinal}${f.crescimento_pct}%</li>`;
-                        });
-                        html += '</ul>';
-                    });
-                    document.getElementById('resultado-tendencias').innerHTML = html;
-                })
-                .catch(() => {
-                    document.getElementById('resultado-tendencias').innerHTML = 'Erro ao carregar tendências.';
-                });
-        }
-     </script>
-                                                                
+    <div id="comparar-result" style="display:none">
+      <div class="comparar-table-wrap">
+        <table class="comparar-table">
+          <thead>
+            <tr>
+              <th class="col-a" id="th-a">Lisboa</th>
+              <th class="col-mid">Filme</th>
+              <th class="col-b" id="th-b">Porto</th>
+            </tr>
+          </thead>
+          <tbody id="comparar-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <style>
+    /* FILTROS */
+    .tend-filter {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all var(--ease);
+    }
+
+    .filter-btn:hover { border-color: rgba(229,24,27,0.3); color: var(--text); }
+    .filter-btn.active { background: var(--red); color: #fff; border-color: var(--red); box-shadow: 0 0 12px rgba(229,24,27,0.35); }
+
+    /* TENDÊNCIAS GRID */
+    .tend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .tend-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      cursor: pointer;
+      transition: all var(--ease);
+    }
+
+    .tend-card:hover {
+      border-color: rgba(229,24,27,0.25);
+      background: #1e1e26;
+      transform: translateY(-2px);
+    }
+
+    .tend-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+    }
+
+    .tend-card-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .tend-card-genre { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+
+    .tend-bar-row { display: flex; align-items: center; gap: 8px; }
+    .tend-bar-bg { flex: 1; height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+    .tend-bar-fill { height: 3px; border-radius: 2px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); width: 0; }
+    .fill-red  { background: var(--red); }
+    .fill-purp { background: var(--purp); }
+    .fill-gray { background: rgba(255,255,255,0.2); }
+
+    .tend-pct { font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+
+    .tend-cities { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 0.6rem; }
+    .city-tag {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2px 8px;
+    }
+
+    /* COMPARAR */
+    .comparar-selectors {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .comparar-select-wrap { flex: 1; min-width: 140px; }
+
+    .vs-badge {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      padding-bottom: 0.4rem;
+      flex-shrink: 0;
+    }
+
+    .comparar-table-wrap { overflow-x: auto; }
+
+    .comparar-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .comparar-table th {
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .col-a   { color: var(--red); text-align: left; }
+    .col-b   { color: var(--purp); text-align: right; }
+    .col-mid { color: var(--text-muted); text-align: center; font-size: 0.75rem; }
+
+    .comparar-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background var(--ease);
+    }
+
+    .comparar-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .comparar-table tr:last-child td { border-bottom: none; }
+
+    .val-a { font-weight: 600; text-align: left; }
+    .val-b { font-weight: 600; text-align: right; }
+    .val-mid { color: var(--text-muted); text-align: center; font-size: 0.82rem; }
+
+    .win-a { color: var(--red) !important; }
+    .win-b { color: var(--purp) !important; }
+  </style>
+
+  <script>
+    const TENDENCIAS = [
+      { t:'Alien: Romulus',     g:'Terror · Sci-Fi · 2024',    p:92, c:32, tipo:'hot',      cidades:['Lisboa','Porto','Braga']      },
+      { t:'Oppenheimer',        g:'Drama · História · 2023',   p:88, c:28, tipo:'hot',      cidades:['Lisboa','Porto']              },
+      { t:'Dune: Part Two',     g:'Ficção Científica · 2024',  p:78, c:21, tipo:'trending', cidades:['Faro','Coimbra','Évora']      },
+      { t:'Gladiador II',       g:'Ação · Drama · 2024',       p:75, c:18, tipo:'trending', cidades:['Braga','Setúbal']             },
+      { t:'Deadpool & Wolverine',g:'Ação · Comédia · 2024',    p:60, c:14, tipo:'trending', cidades:['Lisboa','Faro']               },
+      { t:'Poor Things',        g:'Drama · Fantasia · 2023',   p:40, c:-5, tipo:'descida',  cidades:['Coimbra','Aveiro']            },
+      { t:'Barbie',             g:'Comédia · Fantasia · 2023', p:35, c:-8, tipo:'descida',  cidades:['Lisboa']                      },
+    ];
+
+    const FILMES_COMPARAR = {
+      lisboa:   [{t:'Oppenheimer',p:98},{t:'Dune: Part Two',p:94},{t:'Alien: Romulus',p:89},{t:'Gladiador II',p:85},{t:'Poor Things',p:78}],
+      porto:    [{t:'Oppenheimer',p:85},{t:'Alien: Romulus',p:95},{t:'Dune: Part Two',p:80},{t:'Gladiador II',p:90},{t:'Poor Things',p:65}],
+      coimbra:  [{t:'Oppenheimer',p:78},{t:'Alien: Romulus',p:65},{t:'Dune: Part Two',p:70},{t:'Gladiador II',p:60},{t:'Poor Things',p:85}],
+      braga:    [{t:'Oppenheimer',p:72},{t:'Alien: Romulus',p:80},{t:'Dune: Part Two',p:68},{t:'Gladiador II',p:90},{t:'Poor Things',p:75}],
+      faro:     [{t:'Oppenheimer',p:82},{t:'Alien: Romulus',p:75},{t:'Dune: Part Two',p:88},{t:'Gladiador II',p:70},{t:'Poor Things',p:55}],
+      aveiro:   [{t:'Oppenheimer',p:68},{t:'Alien: Romulus',p:60},{t:'Dune: Part Two',p:70},{t:'Gladiador II',p:58},{t:'Poor Things',p:78}],
+      setubal:  [{t:'Oppenheimer',p:75},{t:'Alien: Romulus',p:65},{t:'Dune: Part Two',p:72},{t:'Gladiador II',p:80},{t:'Poor Things',p:60}],
+      evora:    [{t:'Oppenheimer',p:58},{t:'Alien: Romulus',p:74},{t:'Dune: Part Two',p:62},{t:'Gladiador II',p:65},{t:'Poor Things',p:66}],
+    };
+
+    let filtroAtivo = 'todos';
+
+    function renderTendencias() {
+      const grid = document.getElementById('tend-grid');
+      const lista = filtroAtivo === 'todos'
+        ? TENDENCIAS
+        : TENDENCIAS.filter(f => f.tipo === filtroAtivo);
+
+      grid.innerHTML = lista.map(f => {
+        const isUp   = f.c > 0;
+        const badge  = f.tipo === 'hot'
+          ? '<span class="badge badge-red">🔥 Hot</span>'
+          : f.tipo === 'trending'
+          ? '<span class="badge badge-purp">↑ Trending</span>'
+          : '<span class="badge badge-gray">↓ A descer</span>';
+        const fillClass = f.tipo === 'hot' ? 'fill-red' : f.tipo === 'trending' ? 'fill-purp' : 'fill-gray';
+        const pctClass  = isUp ? 'growth-up' : 'growth-down';
+        const pctText   = isUp ? `+${f.c}%` : `${f.c}%`;
+
+        return `
+          <div class="tend-card" data-tipo="${f.tipo}">
+            <div class="tend-card-top">
+              <span class="tend-card-name">${f.t}</span>
+              ${badge}
+            </div>
+            <div class="tend-card-genre">${f.g}</div>
+            <div class="tend-bar-row">
+              <div class="tend-bar-bg"><div class="tend-bar-fill ${fillClass}" style="width:${f.p}%"></div></div>
+              <span class="tend-pct ${pctClass}">${pctText}</span>
+            </div>
+            <div class="tend-cities">
+              ${f.cidades.map(c => `<span class="city-tag">${c}</span>`).join('')}
+            </div>
+          </div>`;
+      }).join('');
+
+      // Animar barras
+      setTimeout(() => {
+        document.querySelectorAll('.tend-bar-fill').forEach(b => {
+          b.style.width = b.style.width;
+        });
+      }, 50);
+    }
+
+    function filtrar(btn, tipo) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filtroAtivo = tipo;
+      renderTendencias();
+    }
+
+    function comparar() {
+      const idA   = document.getElementById('sel-a').value;
+      const idB   = document.getElementById('sel-b').value;
+      const nomeA = document.getElementById('sel-a').selectedOptions[0].text;
+      const nomeB = document.getElementById('sel-b').selectedOptions[0].text;
+
+      if (idA === idB) {
+        alert('Escolhe duas cidades diferentes!');
+        return;
+      }
+
+      document.getElementById('th-a').textContent = nomeA;
+      document.getElementById('th-b').textContent = nomeB;
+
+      const filmesA = FILMES_COMPARAR[idA] || [];
+      const filmesB = FILMES_COMPARAR[idB] || [];
+
+      const tbody = document.getElementById('comparar-body');
+      tbody.innerHTML = filmesA.map((fa, i) => {
+        const fb   = filmesB[i] || { p: 0 };
+        const winA = fa.p > fb.p ? 'win-a' : '';
+        const winB = fb.p > fa.p ? 'win-b' : '';
+        return `
+          <tr>
+            <td class="val-a ${winA}">${fa.p}</td>
+            <td class="val-mid">${fa.t}</td>
+            <td class="val-b ${winB}">${fb.p}</td>
+          </tr>`;
+      }).join('');
+
+      document.getElementById('comparar-result').style.display = 'block';
+    }
+
+    // Init
+    renderTendencias();
+  </script>
+
 </body>
 </html>
