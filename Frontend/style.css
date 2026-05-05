@@ -1,238 +1,258 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap');
 
-/* ─── TOKENS ─────────────────────────────────── */
-:root {
-  --bg:         #0d0d0f;
-  --bg2:        #141417;
-  --card:       #1a1a20;
-  --border:     rgba(255,255,255,0.08);
-  --red:        #e5181b;
-  --red-glow:   rgba(229,24,27,0.18);
-  --purp:       #a78bfa;
-  --purp-glow:  rgba(167,139,250,0.12);
-  --text:       #f2efea;
-  --text-dim:   rgba(242,239,234,0.5);
-  --text-muted: rgba(242,239,234,0.22);
-  --green:      #4ade80;
-  --radius:     8px;
-  --ease:       0.2s cubic-bezier(0.4,0,0.2,1);
-}
-
-/* ─── RESET ──────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  line-height: 1.6;
-  min-height: 100vh;
-}
+body { background: #000; color: #fff; font-family: 'Outfit', sans-serif; }
 
-/* ─── NAVBAR ─────────────────────────────────── */
+/* NAVBAR */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
   display: flex;
   align-items: center;
-  gap: 2rem;
   padding: 0 2rem;
   height: 56px;
-  background: rgba(13,13,15,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: #000;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .navbar-logo {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem;
-  letter-spacing: 2px;
-  color: var(--red);
+  font-size: 1.5rem;
+  letter-spacing: 1px;
   text-decoration: none;
-  flex-shrink: 0;
-  text-shadow: 0 0 20px rgba(229,24,27,0.3);
+  margin-right: 3rem;
 }
+
+.navbar-logo .film { color: #e5181b; }
+.navbar-logo .flow { color: #fff; }
 
 .navbar-links {
   display: flex;
   gap: 0.25rem;
   list-style: none;
+  flex: 1;
 }
 
 .navbar-links a {
-  display: block;
-  padding: 0.35rem 0.85rem;
-  border-radius: var(--radius);
-  color: var(--text-dim);
-  text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  transition: color var(--ease), background var(--ease);
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  transition: color 0.2s;
 }
 
-.navbar-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
-.navbar-links a.active { color: var(--red); background: rgba(229,24,27,0.08); }
-.navbar-spacer { flex: 1; }
-.navbar-user { font-size: 0.8rem; color: var(--text-muted); }
+.navbar-links a:hover { color: #fff; }
+.navbar-links a.active { color: #fff; font-weight: 700; }
 
-/* ─── LAYOUT ─────────────────────────────────── */
-.page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; }
-.page-header { margin-bottom: 2rem; }
-.page-header h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.4rem;
-  letter-spacing: 2px;
-  line-height: 1;
+.btn-entrar {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background: transparent;
+  border: 1.5px solid #fff;
+  border-radius: 4px;
+  padding: 0.45rem 1.4rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
-.page-header p { color: var(--text-dim); margin-top: 0.4rem; font-size: 0.9rem; }
 
-.section-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem;
+.btn-entrar:hover { background: #fff; color: #000; }
+
+/* HERO */
+.hero {
+  min-height: calc(100vh - 56px);
+  background: #000;
+  display: flex;
+  align-items: center;
+  padding: 0 2.5rem;
+}
+
+.hero-eyebrow {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.45);
   letter-spacing: 1.5px;
-  color: var(--text-dim);
+  text-transform: uppercase;
   margin-bottom: 1rem;
 }
 
-.divider { height: 1px; background: var(--border); margin: 2rem 0; }
-
-/* ─── CARD ───────────────────────────────────── */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  letter-spacing: 2px;
+  line-height: 1;
+  color: #fff;
+  margin-bottom: 1.2rem;
 }
 
-/* ─── FILM ITEM ──────────────────────────────── */
-.film-list { display: flex; flex-direction: column; gap: 0; }
+.hero-title span { color: #e5181b; }
 
-.film-sticker {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+.hero-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 2.5rem;
+  max-width: 520px;
 }
-.film-sticker:last-child { border-bottom: none; }
-.film-sticker.visible { opacity: 1; transform: translateX(0); }
 
-.film-top-row {
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn-primary {
+  background: #e5181b;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.75rem 1.8rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover { opacity: 0.85; }
+
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.75rem 1.8rem;
+  border-radius: 4px;
+  border: 1.5px solid #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover { background: #fff; color: #000; }
+
+/* PORTUGAL EM ALTA */
+.section { padding: 3rem 2.5rem; background: #000; }
+
+.section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2px;
+  margin-bottom: 1.5rem;
 }
-.film-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
-.film-genre { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
 
-.film-bar-row { display: flex; align-items: center; gap: 8px; }
-.film-bar-bg {
-  flex: 1;
-  height: 3px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 2px;
-  overflow: hidden;
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  color: #fff;
 }
-.film-bar-fill {
-  height: 3px;
-  background: var(--red);
-  border-radius: 2px;
-  width: 0;
-  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
-}
-.film-growth { font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
-.growth-up   { color: var(--green); }
-.growth-down { color: var(--red); }
 
-/* ─── BUTTONS ────────────────────────────────── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 1.2rem;
-  border-radius: var(--radius);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: opacity var(--ease), transform var(--ease), box-shadow var(--ease);
+.section-link {
+  font-size: 0.85rem;
+  color: #e5181b;
   text-decoration: none;
-}
-.btn:active { transform: scale(0.97); }
-
-.btn-primary { background: var(--red); color: #fff; }
-.btn-primary:hover {
-  box-shadow: 0 0 18px rgba(229,24,27,0.55), 0 0 40px rgba(229,24,27,0.15);
-  opacity: 0.92;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
-.btn-ghost {
-  background: rgba(255,255,255,0.06);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover {
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(167,139,250,0.4);
-  color: var(--purp);
-  box-shadow: 0 0 10px rgba(167,139,250,0.15);
+.section-link:hover { opacity: 0.8; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
 }
 
-/* ─── INPUTS ─────────────────────────────────── */
-.input, .select {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.9rem;
-  padding: 0.6rem 0.9rem;
+.film-card {
+  position: relative;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.film-card:hover { transform: scale(1.02); }
+
+.film-card-poster {
   width: 100%;
-  outline: none;
-  transition: border-color var(--ease);
-  appearance: none;
+  aspect-ratio: 2/3;
+  background: #1a1a1f;
+  border-radius: 8px;
+  position: relative;
 }
-.input:focus, .select:focus { border-color: var(--red); }
-.input::placeholder { color: var(--text-muted); }
 
-.field { margin-bottom: 1.1rem; }
-.field-label {
-  display: block;
+.film-card-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e5181b;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.film-card-body { padding: 0.75rem 0; }
+
+.film-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.film-card-genre {
   font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  margin-bottom: 0.35rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 0.5rem;
 }
 
-/* ─── BADGES ─────────────────────────────────── */
-.badge {
-  display: inline-block;
-  padding: 0.15rem 0.55rem;
-  border-radius: 20px;
+.film-card-cities {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.city-tag {
   font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px;
+  padding: 0.15rem 0.6rem;
 }
-.badge-red   { background: var(--red-glow); color: var(--red); }
-.badge-purp  { background: var(--purp-glow); color: var(--purp); }
-.badge-green { background: rgba(74,222,128,0.1); color: var(--green); }
-.badge-gray  { background: rgba(255,255,255,0.06); color: var(--text-dim); }
 
-/* ─── FEEDBACK MESSAGES ──────────────────────── */
-.msg { font-size: 0.85rem; padding: 0.6rem 0.9rem; border-radius: var(--radius); margin-top: 0.75rem; }
-.msg-error   { background: var(--red-glow); color: #ff6b6b; }
-.msg-success { background: rgba(34,197,94,0.12); color: var(--green); }
+/* BANNER MAPA */
+.mapa-banner {
+  margin: 0 2.5rem 3rem;
+  background: #111116;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 2.5rem;
+}
 
-/* ─── LOADING ────────────────────────────────── */
-.loading { color: var(--text-muted); font-size: 0.9rem; padding: 2rem 0; text-align: center; }
+.mapa-banner h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 1.5px;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
 
-/* ─── SCROLLBAR ──────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+.mapa-banner p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 1.5rem;
+  max-width: 480px;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }

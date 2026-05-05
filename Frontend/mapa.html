@@ -8,131 +8,162 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar">
-    <a href="mapa.html" class="navbar-logo">Filmflow</a>
+    <a href="index.html" class="navbar-logo">
+      <span class="film">FILM</span><span class="flow">FLOW</span>
+    </a>
     <ul class="navbar-links">
+      <li><a href="index.html">Início</a></li>
       <li><a href="mapa.html" class="active">Mapa</a></li>
       <li><a href="tendencias.html">Tendências</a></li>
-      <li><a href="recomendacoes.html">Recomendações</a></li>
+      <li><a href="recomendacoes.html">Para Ti</a></li>
     </ul>
-    <div class="navbar-spacer"></div>
-    <a href="login.html" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.9rem;">Entrar</a>
+    <a href="login.html" class="btn-entrar">Entrar</a>
   </nav>
 
-  <!-- MAPA + PAINEL -->
-  <div class="mapa-layout">
-    <div class="mapa-side">
-      <div class="mapa-label">
-        <h2>Portugal em Alta</h2>
-        <p>Clica numa cidade para ver o que está em alta</p>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">PORTUGAL EM ALTA</h2>
+        <p class="section-desc">Clica numa cidade para ver o que está em alta</p>
       </div>
-      <svg id="mapa-svg" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
-        <path d="M80,10 L110,8 L130,15 L145,25 L148,40 L142,55 L150,70 L155,90 L150,110 L158,130 L160,150 L155,165 L160,180 L158,200 L152,215 L155,230 L150,250 L145,265 L140,280 L130,295 L120,310 L108,320 L95,325 L82,318 L70,305 L62,290 L58,275 L55,260 L50,245 L48,228 L52,212 L50,195 L48,178 L52,162 L50,145 L48,128 L52,112 L50,95 L48,78 L52,62 L55,48 L62,32 L72,18 Z" fill="#141417" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-      </svg>
+      <div style="display:flex;gap:0.75rem">
+        <button class="btn-primary">Explorar</button>
+        <a href="tendencias.html" class="btn-outline" style="display:flex;align-items:center;gap:0.4rem;text-decoration:none">⇄ Comparar</a>
+      </div>
     </div>
 
-    <!-- PAINEL LATERAL -->
-    <div class="painel" id="painel">
-      <div class="painel-empty" id="painel-empty">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(242,239,234,0.12)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
-        <p>Clica numa cidade<br>para ver o que está em alta</p>
+    <div class="mapa-layout">
+      <div class="mapa-side">
+        <svg id="mapa-svg" viewBox="150 50 180 380" xmlns="http://www.w3.org/2000/svg">
+
+          <!-- Silhueta Portugal Continental -->
+          <path d="
+            M 210,30 L 225,28 L 245,32 L 265,38 L 278,48 L 285,62 L 282,78
+            L 290,88 L 298,102 L 295,118 L 302,130 L 308,148 L 305,162
+            L 312,175 L 315,192 L 310,208 L 316,222 L 318,240 L 312,255
+            L 318,268 L 320,285 L 315,300 L 318,315 L 312,330 L 305,345
+            L 295,358 L 280,368 L 262,375 L 245,378 L 228,375 L 212,368
+            L 198,355 L 188,340 L 180,325 L 175,308 L 172,290 L 175,272
+            L 170,255 L 168,238 L 172,220 L 168,202 L 165,185 L 168,168
+            L 165,150 L 162,132 L 165,115 L 162,98 L 158,82 L 162,66
+            L 168,52 L 180,40 L 195,33 Z
+          " fill="#1a1a22" stroke="rgba(229,24,27,0.3)" stroke-width="1.5"/>
+
+          <!-- Linha do Algarve -->
+          <path d="M 175,372 L 200,382 L 225,386 L 250,384 L 275,378 L 295,368" fill="none" stroke="rgba(229,24,27,0.2)" stroke-width="1"/>
+
+        </svg>
       </div>
-      <div id="painel-content" style="display:none">
-        <div class="painel-city" id="painel-city"></div>
-        <div class="painel-count" id="painel-count"></div>
-        <div class="divider" style="margin: 1rem 0"></div>
-        <div class="film-list" id="painel-films"></div>
+
+      <div class="mapa-painel">
+        <div class="painel-empty" id="painel-empty">
+          <div style="font-size:2rem;margin-bottom:0.75rem">🗺️</div>
+          <p>Clica numa cidade<br>para ver o que está em alta</p>
+        </div>
+        <div id="painel-content" style="display:none">
+          <h3 class="painel-city" id="painel-city"></h3>
+          <p class="painel-count" id="painel-count"></p>
+          <div id="painel-films"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- RANKINGS POR REGIÃO -->
-  <div class="page">
-    <div class="rankings-header">
-      <h2 class="section-title" style="font-size:1.4rem;">Top por Região</h2>
-      <div class="rankings-scroll-wrap">
-        <div class="rankings-scroll" id="rankings-scroll"></div>
-      </div>
+  <!-- TOP POR REGIÃO -->
+  <div class="section" style="background:#0a0a0a;padding-top:0">
+    <div class="section-header" style="margin-bottom:1.5rem">
+      <h3 class="section-title">TOP POR REGIÃO</h3>
+      <span style="font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:1px;align-self:center">ESTA SEMANA</span>
     </div>
+    <div class="top-regiao-scroll" id="top-regiao"></div>
   </div>
 
   <style>
-    /* LAYOUT MAPA */
     .mapa-layout {
       display: flex;
-      height: calc(100vh - 56px);
-      border-bottom: 1px solid var(--border);
+      gap: 1.5rem;
+      align-items: flex-start;
     }
 
     .mapa-side {
       flex: 1;
-      position: relative;
+      background: #0f0f14;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 2rem;
-    }
-
-    .mapa-label {
-      position: absolute;
-      top: 1.5rem;
-      left: 2rem;
-    }
-
-    .mapa-label h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
-      letter-spacing: 2px;
-      color: var(--text);
-    }
-
-    .mapa-label p {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-top: 0.2rem;
+      min-height: 560px;
+      position: relative;
     }
 
     #mapa-svg {
-      width: 280px;
+      width: 70%;
+      max-width: 380px;
       height: auto;
+      filter: drop-shadow(0 0 20px rgba(229,24,27,0.08));
     }
 
-    /* CIDADE DOT */
+    /* CITY DOTS */
     .city-dot { cursor: pointer; }
-    .city-dot circle.ring1 {
-      animation: pulse-ring 2s ease-out infinite;
+
+    .city-dot .core {
+      transition: r 0.15s ease, fill 0.15s ease;
+    }
+
+    .city-dot:hover .core { r: 8; }
+
+    .city-dot .ring1 {
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .city-dot .ring2 {
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .city-dot.selected .core { fill: #e5181b !important; }
+
+    @keyframes pulse1 { 0%{r:8;opacity:0.5} 100%{r:20;opacity:0} }
+    @keyframes pulse2 { 0%{r:8;opacity:0.3} 100%{r:28;opacity:0} }
+
+    .city-dot.selected .ring1 {
+      opacity: 1;
+      animation: pulse1 1.8s ease-out infinite;
       transform-origin: center;
       transform-box: fill-box;
     }
-    .city-dot circle.ring2 {
-      animation: pulse-ring2 2s ease-out infinite 0.4s;
+
+    .city-dot.selected .ring2 {
+      opacity: 1;
+      animation: pulse2 1.8s ease-out infinite 0.3s;
       transform-origin: center;
       transform-box: fill-box;
     }
-    .city-dot circle.core { transition: r 0.15s; }
-    .city-dot:hover circle.core { r: 6; }
-    .city-dot.selected circle.core { fill: #fff; }
-    .city-dot.selected circle.ring1 { stroke: rgba(255,255,255,0.4); }
-    .city-label {
-      font-size: 8px;
-      fill: rgba(242,239,234,0.35);
+
+    .city-name-label {
+      font-size: 9px;
+      fill: rgba(255,255,255,0.5);
       font-family: 'Outfit', sans-serif;
       pointer-events: none;
+      transition: fill 0.2s;
     }
 
-    @keyframes pulse-ring  { 0%{transform:scale(0.5);opacity:0.6} 100%{transform:scale(2.4);opacity:0} }
-    @keyframes pulse-ring2 { 0%{transform:scale(0.5);opacity:0.35} 100%{transform:scale(3);opacity:0} }
+    .city-dot.selected .city-name-label { fill: #fff; }
+    .city-dot:hover .city-name-label { fill: rgba(255,255,255,0.9); }
 
     /* PAINEL */
-    .painel {
-      width: 300px;
+    .mapa-painel {
+      width: 320px;
+      flex-shrink: 0;
       background: #0f0f14;
-      border-left: 1px solid var(--border);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
       padding: 1.5rem;
-      overflow-y: auto;
+      min-height: 560px;
       display: flex;
       flex-direction: column;
     }
@@ -143,144 +174,185 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.75rem;
-      color: var(--text-muted);
-      font-size: 0.85rem;
+      color: rgba(255,255,255,0.2);
+      font-size: 0.88rem;
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .painel-city {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       letter-spacing: 2px;
-      color: var(--text);
+      color: #fff;
       line-height: 1;
+      margin-bottom: 0.25rem;
     }
 
     .painel-count {
-      font-size: 0.78rem;
-      color: var(--text-muted);
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 0.3rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 1.2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
     }
 
-    /* RANKINGS */
-    .rankings-header { margin-bottom: 1rem; }
-    .rankings-scroll-wrap { overflow-x: auto; padding-bottom: 1rem; }
-    .rankings-scroll-wrap::-webkit-scrollbar { height: 4px; }
-    .rankings-scroll-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius:2px; }
+    .painel-film-card {
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
 
-    .rankings-scroll {
+    .painel-film-card.visible { opacity: 1; transform: translateX(0); }
+    .painel-film-card:last-child { border-bottom: none; }
+
+    .painel-film-top {
       display: flex;
-      gap: 1rem;
-      width: max-content;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
     }
 
-    .rank-col {
-      width: 200px;
+    .painel-film-name { font-size: 0.95rem; font-weight: 700; color: #fff; }
+    .painel-film-type { font-size: 0.72rem; color: rgba(255,255,255,0.3); }
+    .painel-film-meta { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-bottom: 0.6rem; }
+
+    .painel-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      background: #2563eb;
+      color: #fff;
+      white-space: nowrap;
       flex-shrink: 0;
     }
 
-    .rank-col-title {
+    .painel-bar-row { display: flex; align-items: center; gap: 0.6rem; }
+    .painel-bar-bg { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+    .painel-bar-fill { height: 4px; background: #2563eb; border-radius: 2px; width: 0; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .painel-pct { font-size: 0.82rem; font-weight: 700; color: #4ade80; white-space: nowrap; }
+
+    /* TOP REGIÃO */
+    .top-regiao-scroll {
+      display: flex;
+      gap: 2rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+    }
+    .top-regiao-scroll::-webkit-scrollbar { height: 3px; }
+    .top-regiao-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .regiao-col { flex-shrink: 0; min-width: 155px; }
+    .regiao-col-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1rem;
-      letter-spacing: 1px;
-      color: var(--red);
-      margin-bottom: 0.75rem;
+      letter-spacing: 1.5px;
+      color: #e5181b;
+      margin-bottom: 1rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid rgba(229,24,27,0.2);
     }
-
-    .rank-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .rank-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1rem;
-      color: var(--text-muted);
-      width: 16px;
-      flex-shrink: 0;
-    }
-
-    .rank-info { flex: 1; min-width: 0; }
-    .rank-name { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .rank-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
-    .rank-bar-bg { height: 2px; background: rgba(255,255,255,0.06); border-radius: 1px; margin-top: 4px; }
-    .rank-bar-fill { height: 2px; background: var(--red); border-radius: 1px; }
+    .regiao-item { margin-bottom: 0.9rem; }
+    .regiao-item-num { font-size: 0.75rem; color: rgba(255,255,255,0.25); margin-bottom: 0.1rem; }
+    .regiao-item-name { font-size: 0.88rem; font-weight: 700; color: #fff; }
+    .regiao-item-meta { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
   </style>
 
   <script>
+    // Cidades com coordenadas ajustadas à silhueta
     const CIDADES = [
-      { id:'viana',    nome:'Viana do Castelo', cx:72,  cy:38,  r:4   },
-      { id:'braga',    nome:'Braga',            cx:84,  cy:58,  r:4   },
-      { id:'porto',    nome:'Porto',            cx:74,  cy:82,  r:5.5 },
-      { id:'aveiro',   nome:'Aveiro',           cx:76,  cy:112, r:4   },
-      { id:'coimbra',  nome:'Coimbra',          cx:90,  cy:148, r:4   },
-      { id:'leiria',   nome:'Leiria',           cx:82,  cy:178, r:4   },
-      { id:'santarem', nome:'Santarém',         cx:85,  cy:210, r:4   },
-      { id:'lisboa',   nome:'Lisboa',           cx:66,  cy:248, r:6.5 },
-      { id:'setubal',  nome:'Setúbal',          cx:72,  cy:272, r:4   },
-      { id:'evora',    nome:'Évora',            cx:108, cy:268, r:4   },
-      { id:'portalegre',nome:'Portalegre',      cx:120, cy:220, r:4   },
-      { id:'castelo',  nome:'Castelo Branco',   cx:110, cy:185, r:4   },
-      { id:'guarda',   nome:'Guarda',           cx:118, cy:148, r:4   },
-      { id:'viseu',    nome:'Viseu',            cx:98,  cy:118, r:4   },
-      { id:'braganca', nome:'Bragança',         cx:130, cy:55,  r:4   },
-      { id:'vreal',    nome:'Vila Real',        cx:108, cy:80,  r:4   },
-      { id:'beja',     nome:'Beja',             cx:104, cy:305, r:4   },
-      { id:'faro',     nome:'Faro',             cx:100, cy:345, r:4   },
+      { id:'viana',      nome:'Viana do Castelo', cx:192, cy:68  },
+      { id:'braga',      nome:'Braga',            cx:200, cy:90  },
+      { id:'braganca',   nome:'Bragança',         cx:278, cy:82  },
+      { id:'porto',      nome:'Porto',            cx:186, cy:118 },
+      { id:'vreal',      nome:'Vila Real',        cx:245, cy:105 },
+      { id:'aveiro',     nome:'Aveiro',           cx:182, cy:148 },
+      { id:'viseu',      nome:'Viseu',            cx:238, cy:140 },
+      { id:'guarda',     nome:'Guarda',           cx:268, cy:168 },
+      { id:'coimbra',    nome:'Coimbra',          cx:192, cy:178 },
+      { id:'castelo',    nome:'Castelo Branco',   cx:258, cy:205 },
+      { id:'leiria',     nome:'Leiria',           cx:185, cy:208 },
+      { id:'portalegre', nome:'Portalegre',       cx:268, cy:240 },
+      { id:'santarem',   nome:'Santarém',         cx:195, cy:242 },
+      { id:'lisboa',     nome:'Lisboa',           cx:178, cy:278 },
+      { id:'evora',      nome:'Évora',            cx:252, cy:278 },
+      { id:'setubal',    nome:'Setúbal',          cx:182, cy:305 },
+      { id:'beja',       nome:'Beja',             cx:248, cy:318 },
+      { id:'faro',       nome:'Faro',             cx:228, cy:368 },
     ];
 
-    const FILMES_MOCK = {
-      lisboa:    [{t:'Oppenheimer',y:'2023',g:'Drama · História',p:98,c:32},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:94,c:28},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:89,c:21},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:85,c:18}],
-      porto:     [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:95,c:22},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:88,c:25},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:80,c:14}],
-      braga:     [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:90,c:22},{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:75,c:15},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:68,c:9}],
-      coimbra:   [{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:85,c:19},{t:'Oppenheimer',y:'2023',g:'Drama · História',p:78,c:13},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:65,c:5}],
-      faro:      [{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:88,c:20},{t:'Oppenheimer',y:'2023',g:'Drama · História',p:82,c:15},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:70,c:9}],
-      aveiro:    [{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:78,c:11},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:70,c:6}],
-      leiria:    [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:76,c:16},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:68,c:10}],
-      setubal:   [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:80,c:17},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:65,c:6}],
-      evora:     [{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:74,c:12},{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:66,c:8}],
-      beja:      [{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:70,c:14},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:62,c:7}],
-      viana:     [{t:'Oppenheimer',y:'2023',g:'Drama · História',p:82,c:12},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:71,c:8}],
-      santarem:  [{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:75,c:13},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:68,c:9}],
-      portalegre:[{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:65,c:7},{t:'Oppenheimer',y:'2023',g:'Drama · História',p:58,c:5}],
-      castelo:   [{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:67,c:9},{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:60,c:6}],
-      guarda:    [{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:63,c:8},{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:55,c:4}],
-      viseu:     [{t:'Oppenheimer',y:'2023',g:'Drama · História',p:72,c:10},{t:'Dune: Part Two',y:'2024',g:'Ficção Científica',p:65,c:7}],
-      braganca:  [{t:'Alien: Romulus',y:'2024',g:'Terror · Sci-Fi',p:60,c:9},{t:'Gladiador II',y:'2024',g:'Ação · Drama',p:55,c:5}],
-      vreal:     [{t:'Poor Things',y:'2023',g:'Drama · Fantasia',p:68,c:8},{t:'Oppenheimer',y:'2023',g:'Drama · História',p:62,c:6}],
+    const FILMES_MAPA = {
+      viana:     [{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia',   p:65,c:15},{t:'The Last of Us',  tipo:'Série', m:'2023 · Drama · Aventura', p:58,c:12},{t:'Breaking Bad',   tipo:'Série', m:'2008 · Drama · Crime',     p:52,c:8}],
+      braga:     [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:90,c:22},{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:80,c:18},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica', p:68,c:9}],
+      porto:     [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:95,c:22},{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:88,c:25},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica', p:80,c:14}],
+      aveiro:    [{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia',   p:78,c:11},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',p:70,c:6},{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',  p:63,c:5}],
+      coimbra:   [{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',  p:85,c:19},{t:'Oppenheimer',   tipo:'Filme', m:'2023 · Drama · História', p:78,c:13},{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',      p:65,c:8}],
+      lisboa:    [{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',   p:98,c:32},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',p:94,c:28},{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:89,c:21}],
+      faro:      [{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',  p:88,c:20},{t:'Oppenheimer',   tipo:'Filme', m:'2023 · Drama · História', p:82,c:15},{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',      p:70,c:9}],
+      evora:     [{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',    p:74,c:12},{t:'Poor Things',   tipo:'Filme', m:'2023 · Drama · Fantasia', p:66,c:8},{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',  p:58,c:5}],
+      setubal:   [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:80,c:17},{t:'Alien: Romulus',tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:65,c:6},{t:'Dune: Part Two',  tipo:'Filme', m:'2024 · Ficção Científica', p:60,c:4}],
+      leiria:    [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:76,c:16},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',p:68,c:10},{t:'Poor Things',   tipo:'Filme', m:'2023 · Drama · Fantasia', p:59,c:5}],
+      santarem:  [{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',    p:75,c:13},{t:'Gladiador II',  tipo:'Filme', m:'2024 · Ação · Drama',      p:68,c:9},{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',  p:60,c:6}],
+      viseu:     [{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',   p:72,c:10},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',p:65,c:7},{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia', p:58,c:4}],
+      guarda:    [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:63,c:8},{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia', p:55,c:4},{t:'Alien: Romulus',  tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:50,c:3}],
+      castelo:   [{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',  p:67,c:9},{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:60,c:6},{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',  p:55,c:4}],
+      portalegre:[{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia',   p:65,c:7},{t:'Oppenheimer',   tipo:'Filme', m:'2023 · Drama · História',  p:58,c:5},{t:'Gladiador II',    tipo:'Filme', m:'2024 · Ação · Drama',      p:52,c:3}],
+      beja:      [{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',  p:70,c:14},{t:'Gladiador II',  tipo:'Filme', m:'2024 · Ação · Drama',      p:62,c:7},{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia', p:55,c:3}],
+      vreal:     [{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia',   p:68,c:8},{t:'Oppenheimer',   tipo:'Filme', m:'2023 · Drama · História',  p:62,c:6},{t:'Dune: Part Two',  tipo:'Filme', m:'2024 · Ficção Científica', p:55,c:4}],
+      braganca:  [{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',    p:60,c:9},{t:'Gladiador II',  tipo:'Filme', m:'2024 · Ação · Drama',       p:55,c:5},{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia', p:48,c:3}],
     };
+
+    const TOP_REGIOES = [
+      { nome:'Lisboa',  filmes:[{t:'Oppenheimer',g:'Drama 2023'},{t:'Dune: Part Two',g:'Sci-fi 2024'},{t:'Alien: Romulus',g:'Terror 2024'}]},
+      { nome:'Porto',   filmes:[{t:'Gladiador II',g:'Ação 2024'},{t:'Alien: Romulus',g:'Terror 2024'},{t:'Oppenheimer',g:'Drama 2023'}]},
+      { nome:'Coimbra', filmes:[{t:'Dune: Part Two',g:'Sci-fi 2024'},{t:'Oppenheimer',g:'Drama 2023'},{t:'Gladiador II',g:'Ação 2024'}]},
+      { nome:'Faro',    filmes:[{t:'Oppenheimer',g:'Drama 2023'},{t:'Dune: Part Two',g:'Sci-fi 2024'},{t:'Poor Things',g:'Drama 2023'}]},
+      { nome:'Braga',   filmes:[{t:'Gladiador II',g:'Ação 2024'},{t:'Alien: Romulus',g:'Terror 2024'},{t:'Dune: Part Two',g:'Sci-fi 2024'}]},
+      { nome:'Aveiro',  filmes:[{t:'Poor Things',g:'Drama 2023'},{t:'Dune: Part Two',g:'Sci-fi 2024'},{t:'Oppenheimer',g:'Drama 2023'}]},
+      { nome:'Setúbal', filmes:[{t:'Gladiador II',g:'Ação 2024'},{t:'Alien: Romulus',g:'Terror 2024'},{t:'Dune: Part Two',g:'Sci-fi 2024'}]},
+      { nome:'Évora',   filmes:[{t:'Alien: Romulus',g:'Terror 2024'},{t:'Poor Things',g:'Drama 2023'},{t:'Oppenheimer',g:'Drama 2023'}]},
+      { nome:'Leiria',  filmes:[{t:'Gladiador II',g:'Ação 2024'},{t:'Dune: Part Two',g:'Sci-fi 2024'},{t:'Poor Things',g:'Drama 2023'}]},
+      { nome:'Viseu',   filmes:[{t:'Oppenheimer',g:'Drama 2023'},{t:'Dune: Part Two',g:'Sci-fi 2024'},{t:'Poor Things',g:'Drama 2023'}]},
+      { nome:'Guarda',  filmes:[{t:'Gladiador II',g:'Ação 2024'},{t:'Poor Things',g:'Drama 2023'},{t:'Alien: Romulus',g:'Terror 2024'}]},
+      { nome:'Beja',    filmes:[{t:'Dune: Part Two',g:'Sci-fi 2024'},{t:'Gladiador II',g:'Ação 2024'},{t:'Poor Things',g:'Drama 2023'}]},
+    ];
 
     // Render cidades no SVG
     const svg = document.getElementById('mapa-svg');
     CIDADES.forEach(c => {
-      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      g.setAttribute('class', 'city-dot');
+      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+      g.setAttribute('class','city-dot');
       g.dataset.id = c.id;
-      g.dataset.nome = c.nome;
       g.innerHTML = `
-        <circle cx="${c.cx}" cy="${c.cy}" r="${c.r * 2.5}" fill="rgba(229,24,27,0.06)" class="ring2" stroke="rgba(229,24,27,0.25)" stroke-width="1"/>
-        <circle cx="${c.cx}" cy="${c.cy}" r="${c.r * 2.5}" fill="none" class="ring1" stroke="rgba(229,24,27,0.45)" stroke-width="1"/>
-        <circle cx="${c.cx}" cy="${c.cy}" r="${c.r}" fill="#e5181b" class="core"/>
-        <text x="${c.cx + c.r + 3}" y="${c.cy + 3}" class="city-label">${c.nome.split(' ')[0]}</text>
+        <circle cx="${c.cx}" cy="${c.cy}" r="26" fill="rgba(229,24,27,0)" class="ring2" stroke="rgba(229,24,27,0.2)" stroke-width="1"/>
+        <circle cx="${c.cx}" cy="${c.cy}" r="20" fill="rgba(229,24,27,0)" class="ring1" stroke="rgba(229,24,27,0.35)" stroke-width="1"/>
+        <circle cx="${c.cx}" cy="${c.cy}" r="5" fill="rgba(255,255,255,0.25)" class="core"/>
+        <text x="${c.cx + 8}" y="${c.cy + 4}" class="city-name-label">${c.nome}</text>
       `;
       g.addEventListener('click', () => selectCidade(c.id, c.nome));
       svg.appendChild(g);
     });
 
     function selectCidade(id, nome) {
-      // Reset selected
-      document.querySelectorAll('.city-dot').forEach(d => d.classList.remove('selected'));
-      document.querySelector(`[data-id="${id}"]`).classList.add('selected');
+      // Reset todos
+      document.querySelectorAll('.city-dot').forEach(d => {
+        d.classList.remove('selected');
+        d.querySelector('.core').setAttribute('fill','rgba(255,255,255,0.25)');
+        d.querySelector('.core').setAttribute('r','5');
+      });
 
-      const filmes = FILMES_MOCK[id] || [];
+      // Selecionar
+      const dot = document.querySelector(`[data-id="${id}"]`);
+      dot.classList.add('selected');
+      dot.querySelector('.core').setAttribute('fill','#e5181b');
+      dot.querySelector('.core').setAttribute('r','7');
+
+      const filmes = FILMES_MAPA[id] || [];
       const max = filmes[0]?.p || 100;
 
       document.getElementById('painel-empty').style.display = 'none';
@@ -288,77 +360,48 @@
       document.getElementById('painel-city').textContent = nome;
       document.getElementById('painel-count').textContent = filmes.length + ' títulos em alta';
 
-      const container = document.getElementById('painel-films');
-      container.innerHTML = filmes.map((f, i) => {
-        const trending = f.c > 20
-          ? '<span class="badge badge-red">🔥 Hot</span>'
-          : f.c > 10
-          ? '<span class="badge badge-purp">↑ Trending</span>'
-          : '';
-        const growth = f.c > 0
-          ? `<span class="film-growth growth-up">+${f.c}%</span>`
-          : `<span class="film-growth growth-down">${f.c}%</span>`;
-        return `
-          <div class="film-sticker" id="fs-${i}">
-            <div class="film-top-row">
-              <span class="film-name">${f.t}</span>
-              <div style="display:flex;gap:4px">${trending}</div>
+      document.getElementById('painel-films').innerHTML = filmes.map((f, i) => `
+        <div class="painel-film-card" id="pfc-${i}">
+          <div class="painel-film-top">
+            <div>
+              <div class="painel-film-name">${f.t}</div>
+              <div class="painel-film-type">${f.tipo}</div>
             </div>
-            <div class="film-genre">${f.y} · ${f.g}</div>
-            <div class="film-bar-row">
-              <div class="film-bar-bg"><div class="film-bar-fill" id="bar-${i}"></div></div>
-              ${growth}
+            <span class="painel-badge">↑ Trending</span>
+          </div>
+          <div class="painel-film-meta">${f.m}</div>
+          <div class="painel-bar-row">
+            <div class="painel-bar-bg">
+              <div class="painel-bar-fill" id="pfb-${i}"></div>
             </div>
-          </div>`;
-      }).join('');
+            <span class="painel-pct">${Math.round(f.p/max*100)}%</span>
+          </div>
+        </div>`).join('');
 
       // Animar entrada
       filmes.forEach((f, i) => {
         setTimeout(() => {
-          const s = document.getElementById('fs-' + i);
-          if (s) s.classList.add('visible');
+          const card = document.getElementById(`pfc-${i}`);
+          if (card) card.classList.add('visible');
           setTimeout(() => {
-            const b = document.getElementById('bar-' + i);
-            if (b) b.style.width = Math.round(f.p / max * 100) + '%';
+            const bar = document.getElementById(`pfb-${i}`);
+            if (bar) bar.style.width = Math.round(f.p/max*100) + '%';
           }, 80);
         }, i * 100);
       });
-
-      // Tentar API real
-      fetch(`http://localhost:8001/get_trends.php?loc=${id}`)
-        .then(r => r.json())
-        .then(data => {
-          if (data.tendencias && data.tendencias.length > 0) {
-            // substituir mock com dados reais quando API estiver ativa
-          }
-        })
-        .catch(() => {});
     }
 
-    // Render rankings
-    const rankCidades = ['lisboa', 'porto', 'coimbra', 'faro', 'braga', 'aveiro', 'setubal', 'evora', 'beja', 'viana', 'leiria', 'santarem', 'viseu', 'guarda', 'castelo', 'portalegre', 'vreal', 'braganca'];
-    const rankNomes   = ['Lisboa', 'Porto', 'Coimbra', 'Faro', 'Braga', 'Aveiro', 'Setúbal', 'Évora', 'Beja', 'Viana do Castelo', 'Leiria', 'Santarém', 'Viseu', 'Guarda', 'Castelo Branco', 'Portalegre', 'Vila Real', 'Bragança'];
-
-    const scroll = document.getElementById('rankings-scroll');
-    rankCidades.forEach((id, idx) => {
-      const filmes = FILMES_MOCK[id] || [];
-      const max = filmes[0]?.p || 100;
-      const col = document.createElement('div');
-      col.className = 'rank-col';
-      col.innerHTML = `
-        <div class="rank-col-title">${rankNomes[idx]}</div>
-        ${filmes.slice(0, 3).map((f, i) => `
-          <div class="rank-item">
-            <span class="rank-num">${i + 1}</span>
-            <div class="rank-info">
-              <div class="rank-name">${f.t}</div>
-              <div class="rank-meta">${f.g} · ${f.y}</div>
-              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${Math.round(f.p / max * 100)}%"></div></div>
-            </div>
+    // Render top regiões
+    document.getElementById('top-regiao').innerHTML = TOP_REGIOES.map(r => `
+      <div class="regiao-col">
+        <div class="regiao-col-title">${r.nome.toUpperCase()}</div>
+        ${r.filmes.map((f,i) => `
+          <div class="regiao-item">
+            <div class="regiao-item-num">${i+1}</div>
+            <div class="regiao-item-name">${f.t}</div>
+            <div class="regiao-item-meta">${f.g}</div>
           </div>`).join('')}
-      `;
-      scroll.appendChild(col);
-    });
+      </div>`).join('');
   </script>
 
 </body>
