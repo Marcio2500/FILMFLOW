@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+header('Content-Type: application/json');
 include_once '../config/db.php';
 
 $sql = "SELECT c.id, c.titulo, c.descricao, c.ano, c.popularidade, c.tendencia_pct,
@@ -14,9 +14,11 @@ $sql = "SELECT c.id, c.titulo, c.descricao, c.ano, c.popularidade, c.tendencia_p
         GROUP BY c.id, v.localizacao_id
         ORDER BY c.popularidade DESC";
 
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$filmes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-echo json_encode($filmes, JSON_UNESCAPED_UNICODE);
+try {
+    $stmt = $conn->query($sql);
+    $filmes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($filmes);
+} catch (PDOException $e) {
+    echo json_encode(['erro' => 'Erro de base de dados: ' . $e->getMessage()]);
+}
 ?>

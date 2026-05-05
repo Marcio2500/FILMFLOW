@@ -15,8 +15,8 @@
     <ul class="navbar-links">
       <li><a href="index.html">Início</a></li>
       <li><a href="mapa.html" class="active">Mapa</a></li>
+      <li><a href="para-ti.html">Para Ti</a></li>
       <li><a href="tendencias.html">Tendências</a></li>
-      <li><a href="recomendacoes.html">Para Ti</a></li>
     </ul>
     <a href="login.html" class="btn-entrar">Entrar</a>
   </nav>
@@ -25,47 +25,27 @@
     <div class="section-header">
       <div>
         <h2 class="section-title">PORTUGAL EM ALTA</h2>
-        <p class="section-desc">Clica numa cidade para ver o que está em alta</p>
+        <p class="section-desc">Clica numa cidade para explorar ou em duas para comparar</p>
       </div>
-      <div style="display:flex;gap:0.75rem">
-        <button class="btn-primary">Explorar</button>
-        <a href="tendencias.html" class="btn-outline" style="display:flex;align-items:center;gap:0.4rem;text-decoration:none">⇄ Comparar</a>
+      <div style="display:flex;gap:0.75rem;align-items:center">
+        <button class="mode-btn active" id="btn-explorar" onclick="setModo('explorar')">Explorar</button>
+        <button class="mode-btn" id="btn-comparar" onclick="setModo('comparar')">⇄ Comparar</button>
       </div>
     </div>
 
     <div class="mapa-layout">
       <div class="mapa-side">
-        <svg id="mapa-svg" viewBox="150 50 180 380" xmlns="http://www.w3.org/2000/svg">
-
-          <!-- Silhueta Portugal Continental -->
-          <path d="
-            M 210,30 L 225,28 L 245,32 L 265,38 L 278,48 L 285,62 L 282,78
-            L 290,88 L 298,102 L 295,118 L 302,130 L 308,148 L 305,162
-            L 312,175 L 315,192 L 310,208 L 316,222 L 318,240 L 312,255
-            L 318,268 L 320,285 L 315,300 L 318,315 L 312,330 L 305,345
-            L 295,358 L 280,368 L 262,375 L 245,378 L 228,375 L 212,368
-            L 198,355 L 188,340 L 180,325 L 175,308 L 172,290 L 175,272
-            L 170,255 L 168,238 L 172,220 L 168,202 L 165,185 L 168,168
-            L 165,150 L 162,132 L 165,115 L 162,98 L 158,82 L 162,66
-            L 168,52 L 180,40 L 195,33 Z
-          " fill="#1a1a22" stroke="rgba(229,24,27,0.3)" stroke-width="1.5"/>
-
-          <!-- Linha do Algarve -->
-          <path d="M 175,372 L 200,382 L 225,386 L 250,384 L 275,378 L 295,368" fill="none" stroke="rgba(229,24,27,0.2)" stroke-width="1"/>
-
+        <svg id="mapa-svg" viewBox="140 40 180 340" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 210,30 L 225,28 L 245,32 L 265,38 L 278,48 L 285,62 L 282,78 L 290,88 L 298,102 L 295,118 L 302,130 L 308,148 L 305,162 L 312,175 L 315,192 L 310,208 L 316,222 L 318,240 L 312,255 L 318,268 L 320,285 L 315,300 L 318,315 L 312,330 L 305,345 L 295,358 L 280,368 L 262,375 L 245,378 L 228,375 L 212,368 L 198,355 L 188,340 L 180,325 L 175,308 L 172,290 L 175,272 L 170,255 L 168,238 L 172,220 L 168,202 L 165,185 L 168,168 L 165,150 L 162,132 L 165,115 L 162,98 L 158,82 L 162,66 L 168,52 L 180,40 L 195,33 Z" fill="#1a1a22" stroke="rgba(229,24,27,0.25)" stroke-width="1.5"/>
         </svg>
       </div>
 
-      <div class="mapa-painel">
+      <div class="mapa-painel" id="mapa-painel">
         <div class="painel-empty" id="painel-empty">
           <div style="font-size:2rem;margin-bottom:0.75rem">🗺️</div>
-          <p>Clica numa cidade<br>para ver o que está em alta</p>
+          <p id="painel-empty-text">Clica numa cidade<br>para ver o que está em alta</p>
         </div>
-        <div id="painel-content" style="display:none">
-          <h3 class="painel-city" id="painel-city"></h3>
-          <p class="painel-count" id="painel-count"></p>
-          <div id="painel-films"></div>
-        </div>
+        <div id="painel-content" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -74,17 +54,28 @@
   <div class="section" style="background:#0a0a0a;padding-top:0">
     <div class="section-header" style="margin-bottom:1.5rem">
       <h3 class="section-title">TOP POR REGIÃO</h3>
-      <span style="font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:1px;align-self:center">ESTA SEMANA</span>
+      <span style="font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:1px">ESTA SEMANA</span>
     </div>
     <div class="top-regiao-scroll" id="top-regiao"></div>
   </div>
 
   <style>
-    .mapa-layout {
-      display: flex;
-      gap: 1.5rem;
-      align-items: flex-start;
+    .mode-btn {
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.2s;
     }
+    .mode-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .mode-btn.active { background: #e5181b; color: #fff; border-color: #e5181b; }
+
+    .mapa-layout { display:flex; gap:1.5rem; align-items:flex-start; }
 
     .mapa-side {
       flex: 1;
@@ -95,75 +86,30 @@
       align-items: center;
       justify-content: center;
       padding: 2rem;
-      min-height: 560px;
-      position: relative;
+      min-height: 480px;
     }
 
-    #mapa-svg {
-      width: 70%;
-      max-width: 380px;
-      height: auto;
-      filter: drop-shadow(0 0 20px rgba(229,24,27,0.08));
-    }
+    #mapa-svg { width: 100%; max-width: 380px; height: auto; filter: drop-shadow(0 0 20px rgba(229,24,27,0.06)); }
 
-    /* CITY DOTS */
     .city-dot { cursor: pointer; }
+    .city-dot circle.core { transition: all 0.2s; }
+    .city-dot:hover circle.core { r: 7; }
+    .city-name-label { font-size: 9px; fill: rgba(255,255,255,0.5); font-family:'Outfit',sans-serif; pointer-events:none; }
 
-    .city-dot .core {
-      transition: r 0.15s ease, fill 0.15s ease;
-    }
+    @keyframes pulse-a { 0%{r:10;opacity:0.5} 100%{r:22;opacity:0} }
+    @keyframes pulse-b { 0%{r:10;opacity:0.5} 100%{r:22;opacity:0} }
 
-    .city-dot:hover .core { r: 8; }
+    .city-dot.sel-a circle.pulse { animation: pulse-a 1.8s ease-out infinite; transform-origin:center; transform-box:fill-box; }
+    .city-dot.sel-b circle.pulse { animation: pulse-b 1.8s ease-out infinite; transform-origin:center; transform-box:fill-box; }
 
-    .city-dot .ring1 {
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .city-dot .ring2 {
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .city-dot.selected .core { fill: #e5181b !important; }
-
-    @keyframes pulse1 { 0%{r:8;opacity:0.5} 100%{r:20;opacity:0} }
-    @keyframes pulse2 { 0%{r:8;opacity:0.3} 100%{r:28;opacity:0} }
-
-    .city-dot.selected .ring1 {
-      opacity: 1;
-      animation: pulse1 1.8s ease-out infinite;
-      transform-origin: center;
-      transform-box: fill-box;
-    }
-
-    .city-dot.selected .ring2 {
-      opacity: 1;
-      animation: pulse2 1.8s ease-out infinite 0.3s;
-      transform-origin: center;
-      transform-box: fill-box;
-    }
-
-    .city-name-label {
-      font-size: 9px;
-      fill: rgba(255,255,255,0.5);
-      font-family: 'Outfit', sans-serif;
-      pointer-events: none;
-      transition: fill 0.2s;
-    }
-
-    .city-dot.selected .city-name-label { fill: #fff; }
-    .city-dot:hover .city-name-label { fill: rgba(255,255,255,0.9); }
-
-    /* PAINEL */
     .mapa-painel {
-      width: 320px;
+      width: 340px;
       flex-shrink: 0;
       background: #0f0f14;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 12px;
       padding: 1.5rem;
-      min-height: 560px;
+      min-height: 580px;
       display: flex;
       flex-direction: column;
     }
@@ -174,22 +120,22 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.25);
       font-size: 0.88rem;
       text-align: center;
       line-height: 1.7;
     }
 
-    .painel-city {
+    /* EXPLORAR */
+    .painel-city-name {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.2rem;
+      font-size: 2rem;
       letter-spacing: 2px;
-      color: #fff;
       line-height: 1;
       margin-bottom: 0.25rem;
     }
 
-    .painel-count {
+    .painel-city-count {
       font-size: 0.72rem;
       color: rgba(255,255,255,0.3);
       text-transform: uppercase;
@@ -199,72 +145,124 @@
       border-bottom: 1px solid rgba(255,255,255,0.07);
     }
 
-    .painel-film-card {
-      padding: 1rem 0;
+    .painel-film {
+      padding: 0.85rem 0;
       border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
       opacity: 0;
       transform: translateX(-8px);
       transition: opacity 0.35s ease, transform 0.35s ease;
     }
 
-    .painel-film-card.visible { opacity: 1; transform: translateX(0); }
-    .painel-film-card:last-child { border-bottom: none; }
+    .painel-film.visible { opacity: 1; transform: translateX(0); }
+    .painel-film:last-child { border-bottom: none; }
 
-    .painel-film-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 0.25rem;
+    .pf-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.2);
+      flex-shrink: 0;
+      width: 20px;
     }
 
-    .painel-film-name { font-size: 0.95rem; font-weight: 700; color: #fff; }
-    .painel-film-type { font-size: 0.72rem; color: rgba(255,255,255,0.3); }
-    .painel-film-meta { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-bottom: 0.6rem; }
+    .pf-info { flex: 1; min-width: 0; }
+    .pf-name { font-size: 0.9rem; font-weight: 700; color: #fff; }
+    .pf-meta { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-top: 1px; }
 
-    .painel-badge {
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.2rem 0.55rem;
-      border-radius: 4px;
-      background: #2563eb;
-      color: #fff;
-      white-space: nowrap;
+    .pf-pct { font-size: 0.9rem; font-weight: 700; color: #4ade80; flex-shrink: 0; }
+
+    /* COMPARAR */
+    .comparar-bloco {
+      flex: 1;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .comparar-bloco.bloco-a {
+      background: rgba(229,24,27,0.08);
+      border: 1px solid rgba(229,24,27,0.2);
+    }
+
+    .comparar-bloco.bloco-b {
+      background: rgba(37,99,235,0.08);
+      border: 1px solid rgba(37,99,235,0.2);
+    }
+
+    .bloco-city {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.75rem;
+    }
+
+    .bloco-a .bloco-city { color: #e5181b; }
+    .bloco-b .bloco-city { color: #2563eb; }
+
+    .bloco-film {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .bloco-film:last-child { border-bottom: none; }
+    .bloco-film-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
+    .bloco-film-meta { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+    .bloco-film-pct { font-size: 0.82rem; font-weight: 700; color: #4ade80; flex-shrink: 0; }
+
+    .vs-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 0;
       flex-shrink: 0;
     }
 
-    .painel-bar-row { display: flex; align-items: center; gap: 0.6rem; }
-    .painel-bar-bg { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
-    .painel-bar-fill { height: 4px; background: #2563eb; border-radius: 2px; width: 0; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
-    .painel-pct { font-size: 0.82rem; font-weight: 700; color: #4ade80; white-space: nowrap; }
+    .vs-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+    }
+
+    .comparar-hint {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.25);
+      font-size: 0.88rem;
+      text-align: center;
+      line-height: 1.7;
+      gap: 0.75rem;
+    }
 
     /* TOP REGIÃO */
-    .top-regiao-scroll {
-      display: flex;
-      gap: 2rem;
-      overflow-x: auto;
-      padding-bottom: 1rem;
-    }
-    .top-regiao-scroll::-webkit-scrollbar { height: 3px; }
-    .top-regiao-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-
-    .regiao-col { flex-shrink: 0; min-width: 155px; }
-    .regiao-col-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1rem;
-      letter-spacing: 1.5px;
-      color: #e5181b;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid rgba(229,24,27,0.2);
-    }
-    .regiao-item { margin-bottom: 0.9rem; }
-    .regiao-item-num { font-size: 0.75rem; color: rgba(255,255,255,0.25); margin-bottom: 0.1rem; }
-    .regiao-item-name { font-size: 0.88rem; font-weight: 700; color: #fff; }
-    .regiao-item-meta { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+    .top-regiao-scroll { display:flex; gap:2rem; overflow-x:auto; padding-bottom:1rem; }
+    .top-regiao-scroll::-webkit-scrollbar { height:3px; }
+    .top-regiao-scroll::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+    .regiao-col { flex-shrink:0; min-width:155px; }
+    .regiao-col-title { font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:1.5px; color:#e5181b; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(229,24,27,0.2); }
+    .regiao-item { margin-bottom:0.9rem; }
+    .regiao-item-num { font-size:0.75rem; color:rgba(255,255,255,0.25); margin-bottom:0.1rem; }
+    .regiao-item-name { font-size:0.88rem; font-weight:700; color:#fff; }
+    .regiao-item-meta { font-size:0.7rem; color:rgba(255,255,255,0.35); }
   </style>
 
   <script>
-    // Cidades com coordenadas ajustadas à silhueta
     const CIDADES = [
       { id:'viana',      nome:'Viana do Castelo', cx:192, cy:68  },
       { id:'braga',      nome:'Braga',            cx:200, cy:90  },
@@ -287,24 +285,24 @@
     ];
 
     const FILMES_MAPA = {
-      viana:     [{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia',   p:65,c:15},{t:'The Last of Us',  tipo:'Série', m:'2023 · Drama · Aventura', p:58,c:12},{t:'Breaking Bad',   tipo:'Série', m:'2008 · Drama · Crime',     p:52,c:8}],
-      braga:     [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:90,c:22},{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:80,c:18},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica', p:68,c:9}],
-      porto:     [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:95,c:22},{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:88,c:25},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica', p:80,c:14}],
-      aveiro:    [{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia',   p:78,c:11},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',p:70,c:6},{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',  p:63,c:5}],
-      coimbra:   [{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',  p:85,c:19},{t:'Oppenheimer',   tipo:'Filme', m:'2023 · Drama · História', p:78,c:13},{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',      p:65,c:8}],
-      lisboa:    [{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',   p:98,c:32},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',p:94,c:28},{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:89,c:21}],
-      faro:      [{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',  p:88,c:20},{t:'Oppenheimer',   tipo:'Filme', m:'2023 · Drama · História', p:82,c:15},{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',      p:70,c:9}],
-      evora:     [{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',    p:74,c:12},{t:'Poor Things',   tipo:'Filme', m:'2023 · Drama · Fantasia', p:66,c:8},{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',  p:58,c:5}],
-      setubal:   [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:80,c:17},{t:'Alien: Romulus',tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:65,c:6},{t:'Dune: Part Two',  tipo:'Filme', m:'2024 · Ficção Científica', p:60,c:4}],
-      leiria:    [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:76,c:16},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',p:68,c:10},{t:'Poor Things',   tipo:'Filme', m:'2023 · Drama · Fantasia', p:59,c:5}],
-      santarem:  [{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',    p:75,c:13},{t:'Gladiador II',  tipo:'Filme', m:'2024 · Ação · Drama',      p:68,c:9},{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',  p:60,c:6}],
-      viseu:     [{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',   p:72,c:10},{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',p:65,c:7},{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia', p:58,c:4}],
-      guarda:    [{t:'Gladiador II',   tipo:'Filme', m:'2024 · Ação · Drama',       p:63,c:8},{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia', p:55,c:4},{t:'Alien: Romulus',  tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:50,c:3}],
-      castelo:   [{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',  p:67,c:9},{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',  p:60,c:6},{t:'Oppenheimer',    tipo:'Filme', m:'2023 · Drama · História',  p:55,c:4}],
-      portalegre:[{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia',   p:65,c:7},{t:'Oppenheimer',   tipo:'Filme', m:'2023 · Drama · História',  p:58,c:5},{t:'Gladiador II',    tipo:'Filme', m:'2024 · Ação · Drama',      p:52,c:3}],
-      beja:      [{t:'Dune: Part Two', tipo:'Filme', m:'2024 · Ficção Científica',  p:70,c:14},{t:'Gladiador II',  tipo:'Filme', m:'2024 · Ação · Drama',      p:62,c:7},{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia', p:55,c:3}],
-      vreal:     [{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia',   p:68,c:8},{t:'Oppenheimer',   tipo:'Filme', m:'2023 · Drama · História',  p:62,c:6},{t:'Dune: Part Two',  tipo:'Filme', m:'2024 · Ficção Científica', p:55,c:4}],
-      braganca:  [{t:'Alien: Romulus', tipo:'Filme', m:'2024 · Terror · Sci-Fi',    p:60,c:9},{t:'Gladiador II',  tipo:'Filme', m:'2024 · Ação · Drama',       p:55,c:5},{t:'Poor Things',    tipo:'Filme', m:'2023 · Drama · Fantasia', p:48,c:3}],
+      viana:     [{t:'Poor Things',    m:'Filme · 2023', p:65},{t:'The Last of Us',  m:'Série · 2023', p:58},{t:'Breaking Bad',   m:'Série · 2008', p:52}],
+      braga:     [{t:'Gladiador II',   m:'Filme · 2024', p:85},{t:'Alien: Romulus',  m:'Filme · 2024', p:78},{t:'The Bear',       m:'Série · 2024', p:71},{t:'Stranger Things',m:'Série · 2024', p:67},{t:'Shogun',         m:'Série · 2024', p:60}],
+      porto:     [{t:'Gladiador II',   m:'Filme · 2024', p:95},{t:'Alien: Romulus',  m:'Filme · 2024', p:88},{t:'Dune: Part Two', m:'Filme · 2024', p:80}],
+      aveiro:    [{t:'Poor Things',    m:'Filme · 2023', p:78},{t:'Dune: Part Two',  m:'Filme · 2024', p:70},{t:'Oppenheimer',   m:'Filme · 2023', p:63}],
+      coimbra:   [{t:'Dune: Part Two', m:'Filme · 2024', p:85},{t:'Oppenheimer',    m:'Filme · 2023', p:78},{t:'Gladiador II',  m:'Filme · 2024', p:65}],
+      lisboa:    [{t:'Oppenheimer',    m:'Filme · 2023', p:98},{t:'Dune: Part Two',  m:'Filme · 2024', p:94},{t:'Alien: Romulus',m:'Filme · 2024', p:89}],
+      faro:      [{t:'Dune: Part Two', m:'Filme · 2024', p:88},{t:'Oppenheimer',    m:'Filme · 2023', p:82},{t:'Gladiador II',  m:'Filme · 2024', p:70}],
+      evora:     [{t:'Alien: Romulus', m:'Filme · 2024', p:74},{t:'Poor Things',    m:'Filme · 2023', p:66},{t:'Oppenheimer',   m:'Filme · 2023', p:58}],
+      setubal:   [{t:'Gladiador II',   m:'Filme · 2024', p:80},{t:'Alien: Romulus', m:'Filme · 2024', p:65},{t:'Dune: Part Two', m:'Filme · 2024', p:60}],
+      leiria:    [{t:'Gladiador II',   m:'Filme · 2024', p:76},{t:'Dune: Part Two', m:'Filme · 2024', p:68},{t:'Poor Things',   m:'Filme · 2023', p:59}],
+      santarem:  [{t:'Alien: Romulus', m:'Filme · 2024', p:75},{t:'Gladiador II',   m:'Filme · 2024', p:68},{t:'Oppenheimer',   m:'Filme · 2023', p:60}],
+      viseu:     [{t:'Oppenheimer',    m:'Filme · 2023', p:72},{t:'Dune: Part Two', m:'Filme · 2024', p:65},{t:'Poor Things',   m:'Filme · 2023', p:58}],
+      guarda:    [{t:'Gladiador II',   m:'Filme · 2024', p:63},{t:'Poor Things',    m:'Filme · 2023', p:55},{t:'Alien: Romulus', m:'Filme · 2024', p:50}],
+      castelo:   [{t:'Dune: Part Two', m:'Filme · 2024', p:67},{t:'Alien: Romulus', m:'Filme · 2024', p:60},{t:'Oppenheimer',   m:'Filme · 2023', p:55}],
+      portalegre:[{t:'Poor Things',    m:'Filme · 2023', p:65},{t:'Oppenheimer',    m:'Filme · 2023', p:58},{t:'Gladiador II',  m:'Filme · 2024', p:52}],
+      beja:      [{t:'Dune: Part Two', m:'Filme · 2024', p:70},{t:'Gladiador II',   m:'Filme · 2024', p:62},{t:'Poor Things',   m:'Filme · 2023', p:55}],
+      vreal:     [{t:'Poor Things',    m:'Filme · 2023', p:68},{t:'Oppenheimer',    m:'Filme · 2023', p:62},{t:'Dune: Part Two', m:'Filme · 2024', p:55}],
+      braganca:  [{t:'Alien: Romulus', m:'Filme · 2024', p:60},{t:'Gladiador II',   m:'Filme · 2024', p:55},{t:'Poor Things',   m:'Filme · 2023', p:48}],
     };
 
     const TOP_REGIOES = [
@@ -322,74 +320,213 @@
       { nome:'Beja',    filmes:[{t:'Dune: Part Two',g:'Sci-fi 2024'},{t:'Gladiador II',g:'Ação 2024'},{t:'Poor Things',g:'Drama 2023'}]},
     ];
 
-    // Render cidades no SVG
+    let modo = 'explorar';
+    let cidadeA = null;
+    let cidadeB = null;
+
+    function setModo(m) {
+      modo = m;
+      document.getElementById('btn-explorar').classList.toggle('active', m === 'explorar');
+      document.getElementById('btn-comparar').classList.toggle('active', m === 'comparar');
+
+      // Reset seleções
+      cidadeA = null;
+      cidadeB = null;
+      document.querySelectorAll('.city-dot').forEach(d => {
+        d.classList.remove('sel-a','sel-b');
+        d.querySelector('.core').setAttribute('fill','rgba(255,255,255,0.25)');
+        d.querySelector('.core').setAttribute('r','5');
+        d.querySelector('.pulse').setAttribute('stroke','rgba(229,24,27,0)');
+      });
+
+      const empty = document.getElementById('painel-empty');
+      const content = document.getElementById('painel-content');
+      empty.style.display = 'flex';
+      content.style.display = 'none';
+
+      document.getElementById('painel-empty-text').innerHTML = m === 'explorar'
+        ? 'Clica numa cidade<br>para ver o que está em alta'
+        : 'Clica em duas cidades<br>para as comparar';
+    }
+
+    function clickCidade(id, nome) {
+      if (modo === 'explorar') {
+        explorarCidade(id, nome);
+      } else {
+        compararCidade(id, nome);
+      }
+    }
+
+    function explorarCidade(id, nome) {
+      // Reset todos
+      document.querySelectorAll('.city-dot').forEach(d => {
+        d.classList.remove('sel-a','sel-b');
+        d.querySelector('.core').setAttribute('fill','rgba(255,255,255,0.25)');
+        d.querySelector('.core').setAttribute('r','5');
+        d.querySelector('.pulse').setAttribute('stroke','rgba(229,24,27,0)');
+      });
+
+      // Selecionar
+      const dot = document.querySelector(`[data-id="${id}"]`);
+      dot.classList.add('sel-a');
+      dot.querySelector('.core').setAttribute('fill','#e5181b');
+      dot.querySelector('.core').setAttribute('r','7');
+      dot.querySelector('.pulse').setAttribute('stroke','rgba(229,24,27,0.4)');
+
+      const filmes = FILMES_MAPA[id] || [];
+      document.getElementById('painel-empty').style.display = 'none';
+      document.getElementById('painel-content').style.display = 'block';
+      document.getElementById('painel-content').innerHTML = `
+        <div class="painel-city-name" style="color:#fff">${nome}</div>
+        <div class="painel-city-count">${filmes.length} títulos em alta</div>
+        ${filmes.map((f, i) => `
+          <div class="painel-film" id="pf-${i}">
+            <span class="pf-num">${i+1}</span>
+            <div class="pf-info">
+              <div class="pf-name">${f.t}</div>
+              <div class="pf-meta">${f.m}</div>
+            </div>
+            <span class="pf-pct">${f.p}%</span>
+          </div>`).join('')}
+      `;
+
+     filmes.forEach((_, i) => {
+  setTimeout(() => {
+    const el = document.getElementById(`pf-${i}`);
+    if (el) el.classList.add('visible');
+  }, i * 80);
+});
+
+setTimeout(async () => {
+  for (const f of filmes) {
+    const poster = await getTMDBPoster(f.t);
+    if (poster) {
+      const els = document.querySelectorAll('.pf-name');
+      els.forEach(el => {
+        if (el.textContent === f.t) {
+          const card = el.closest('.painel-film');
+          if (card) {
+            card.style.backgroundImage = `url(${poster})`;
+            card.style.backgroundSize = 'cover';
+            card.style.backgroundPosition = 'center';
+            card.style.borderRadius = '8px';
+            card.style.padding = '0.5rem';
+            card.style.minHeight = '80px';
+          }
+        }
+      });
+    }
+  }
+}, 500);
+    }
+
+    function compararCidade(id, nome) {
+      const dot = document.querySelector(`[data-id="${id}"]`);
+
+      if (!cidadeA) {
+        cidadeA = { id, nome };
+        dot.classList.add('sel-a');
+        dot.querySelector('.core').setAttribute('fill','#e5181b');
+        dot.querySelector('.core').setAttribute('r','7');
+        dot.querySelector('.pulse').setAttribute('stroke','rgba(229,24,27,0.4)');
+
+        document.getElementById('painel-empty').style.display = 'none';
+        document.getElementById('painel-content').style.display = 'block';
+        document.getElementById('painel-content').innerHTML = `
+          <div class="comparar-hint">
+            <div style="font-size:1.5rem">📍</div>
+            <p><strong style="color:#e5181b">${nome}</strong> selecionada<br>Clica numa segunda cidade</p>
+          </div>`;
+
+      } else if (!cidadeB && id !== cidadeA.id) {
+        cidadeB = { id, nome };
+        dot.classList.add('sel-b');
+        dot.querySelector('.core').setAttribute('fill','#2563eb');
+        dot.querySelector('.core').setAttribute('r','7');
+        dot.querySelector('.pulse').setAttribute('stroke','rgba(37,99,235,0.4)');
+        renderComparar();
+
+      } else if (id === cidadeA?.id || id === cidadeB?.id) {
+        // Desselecionar
+        if (id === cidadeA?.id) {
+          dot.classList.remove('sel-a');
+          dot.querySelector('.core').setAttribute('fill','rgba(255,255,255,0.25)');
+          dot.querySelector('.core').setAttribute('r','5');
+          dot.querySelector('.pulse').setAttribute('stroke','rgba(229,24,27,0)');
+          cidadeA = cidadeB;
+          cidadeB = null;
+          if (cidadeA) {
+            const dotA = document.querySelector(`[data-id="${cidadeA.id}"]`);
+            dotA.classList.remove('sel-b');
+            dotA.classList.add('sel-a');
+            dotA.querySelector('.core').setAttribute('fill','#e5181b');
+            dotA.querySelector('.pulse').setAttribute('stroke','rgba(229,24,27,0.4)');
+          }
+        } else {
+          dot.classList.remove('sel-b');
+          dot.querySelector('.core').setAttribute('fill','rgba(255,255,255,0.25)');
+          dot.querySelector('.core').setAttribute('r','5');
+          dot.querySelector('.pulse').setAttribute('stroke','rgba(229,24,27,0)');
+          cidadeB = null;
+        }
+
+        if (!cidadeA) {
+          document.getElementById('painel-empty').style.display = 'flex';
+          document.getElementById('painel-content').style.display = 'none';
+        } else if (!cidadeB) {
+          document.getElementById('painel-content').innerHTML = `
+            <div class="comparar-hint">
+              <div style="font-size:1.5rem">📍</div>
+              <p><strong style="color:#e5181b">${cidadeA.nome}</strong> selecionada<br>Clica numa segunda cidade</p>
+            </div>`;
+        }
+      }
+    }
+
+    function renderComparar() {
+      const fA = FILMES_MAPA[cidadeA.id] || [];
+      const fB = FILMES_MAPA[cidadeB.id] || [];
+
+      document.getElementById('painel-content').innerHTML = `
+        <div class="comparar-bloco bloco-a">
+          <div class="bloco-city">${cidadeA.nome}</div>
+          ${fA.map(f => `
+            <div class="bloco-film">
+              <div>
+                <div class="bloco-film-name">${f.t}</div>
+                <div class="bloco-film-meta">${f.m}</div>
+              </div>
+              <span class="bloco-film-pct">${f.p}%</span>
+            </div>`).join('')}
+        </div>
+        <div class="vs-divider"><div class="vs-circle">VS</div></div>
+        <div class="comparar-bloco bloco-b">
+          <div class="bloco-city">${cidadeB.nome}</div>
+          ${fB.map(f => `
+            <div class="bloco-film">
+              <div>
+                <div class="bloco-film-name">${f.t}</div>
+                <div class="bloco-film-meta">${f.m}</div>
+              </div>
+              <span class="bloco-film-pct">${f.p}%</span>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    // Render SVG
     const svg = document.getElementById('mapa-svg');
     CIDADES.forEach(c => {
       const g = document.createElementNS('http://www.w3.org/2000/svg','g');
       g.setAttribute('class','city-dot');
       g.dataset.id = c.id;
       g.innerHTML = `
-        <circle cx="${c.cx}" cy="${c.cy}" r="26" fill="rgba(229,24,27,0)" class="ring2" stroke="rgba(229,24,27,0.2)" stroke-width="1"/>
-        <circle cx="${c.cx}" cy="${c.cy}" r="20" fill="rgba(229,24,27,0)" class="ring1" stroke="rgba(229,24,27,0.35)" stroke-width="1"/>
+        <circle cx="${c.cx}" cy="${c.cy}" r="18" fill="rgba(229,24,27,0)" class="pulse" stroke="rgba(229,24,27,0)" stroke-width="1"/>
         <circle cx="${c.cx}" cy="${c.cy}" r="5" fill="rgba(255,255,255,0.25)" class="core"/>
-        <text x="${c.cx + 8}" y="${c.cy + 4}" class="city-name-label">${c.nome}</text>
+        <text x="${c.cx+8}" y="${c.cy+4}" class="city-name-label">${c.nome}</text>
       `;
-      g.addEventListener('click', () => selectCidade(c.id, c.nome));
+      g.addEventListener('click', () => clickCidade(c.id, c.nome));
       svg.appendChild(g);
     });
-
-    function selectCidade(id, nome) {
-      // Reset todos
-      document.querySelectorAll('.city-dot').forEach(d => {
-        d.classList.remove('selected');
-        d.querySelector('.core').setAttribute('fill','rgba(255,255,255,0.25)');
-        d.querySelector('.core').setAttribute('r','5');
-      });
-
-      // Selecionar
-      const dot = document.querySelector(`[data-id="${id}"]`);
-      dot.classList.add('selected');
-      dot.querySelector('.core').setAttribute('fill','#e5181b');
-      dot.querySelector('.core').setAttribute('r','7');
-
-      const filmes = FILMES_MAPA[id] || [];
-      const max = filmes[0]?.p || 100;
-
-      document.getElementById('painel-empty').style.display = 'none';
-      document.getElementById('painel-content').style.display = 'block';
-      document.getElementById('painel-city').textContent = nome;
-      document.getElementById('painel-count').textContent = filmes.length + ' títulos em alta';
-
-      document.getElementById('painel-films').innerHTML = filmes.map((f, i) => `
-        <div class="painel-film-card" id="pfc-${i}">
-          <div class="painel-film-top">
-            <div>
-              <div class="painel-film-name">${f.t}</div>
-              <div class="painel-film-type">${f.tipo}</div>
-            </div>
-            <span class="painel-badge">↑ Trending</span>
-          </div>
-          <div class="painel-film-meta">${f.m}</div>
-          <div class="painel-bar-row">
-            <div class="painel-bar-bg">
-              <div class="painel-bar-fill" id="pfb-${i}"></div>
-            </div>
-            <span class="painel-pct">${Math.round(f.p/max*100)}%</span>
-          </div>
-        </div>`).join('');
-
-      // Animar entrada
-      filmes.forEach((f, i) => {
-        setTimeout(() => {
-          const card = document.getElementById(`pfc-${i}`);
-          if (card) card.classList.add('visible');
-          setTimeout(() => {
-            const bar = document.getElementById(`pfb-${i}`);
-            if (bar) bar.style.width = Math.round(f.p/max*100) + '%';
-          }, 80);
-        }, i * 100);
-      });
-    }
 
     // Render top regiões
     document.getElementById('top-regiao').innerHTML = TOP_REGIOES.map(r => `
@@ -403,6 +540,10 @@
           </div>`).join('')}
       </div>`).join('');
   </script>
+  <script src="tmdb.js"></script>
+  <script src="chatbot-widget.js"></script>
+  
+
 
 </body>
 </html>

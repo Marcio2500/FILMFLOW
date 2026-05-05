@@ -4,48 +4,74 @@ header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json; charset=utf-8');
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+function responder(int $status, array $payload): void
+{
+    http_response_code($status);
+    echo json_encode($payload, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-include_once '../config/db.php';
-
-$data = json_decode(file_get_contents('php://input'), true);
-
-if (!$data || empty($data['nome']) || empty($data['email']) || empty($data['senha'])) {
-    http_response_code(400);
-    echo json_encode(['erro' => 'Dados inválidos ou incompletos'], JSON_UNESCAPED_UNICODE);
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    http_response_code(204);
     exit;
 }
 
-$nome = trim($data['nome']);
-$email = trim($data['email']);
-$senha = $data['senha'];
-
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    http_response_code(400);
-    echo json_encode(['erro' => 'Email inválido'], JSON_UNESCAPED_UNICODE);
-    exit;
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    responder(405, ['erro' => 'Método não permitido']);
 }
 
-$checkStmt = $conn->prepare('SELECT id FROM utilizadores WHERE email = ?');
-$checkStmt->execute([$email]);
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-if ($checkStmt->fetch()) {
-    http_response_code(409);
-    echo json_encode(['erro' => 'Email já registado'], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+try {
+    require_once __DIR__ . '/../config/db.php';
 
-$senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-$stmt = $conn->prepare('INSERT INTO utilizadores (nome, email, password_hash) VALUES (?, ?, ?)');
+    $rawBody = file_get_contents('php://input');
+    $data = json_decode($rawBody, true);
 
-if ($stmt->execute([$nome, $email, $senhaHash])) {
-    http_response_code(201);
-    echo json_encode(['mensagem' => 'Usuário cadastrado com sucesso!'], JSON_UNESCAPED_UNICODE);
-} else {
-    http_response_code(500);
-    echo json_encode(['erro' => 'Erro ao criar conta'], JSON_UNESCAPED_UNICODE);
-}
+    if (!is_array($data) || !isset($data['nome'], $data['email'], $data['senha'])) {
+        responder(400, ['erro' => 'Dados inválidos']);
+    }
 
-?>
+    $nome = trim((string) $data['nome']);
+    $email = trim((string) $data['email']);
+    $senha = (string) $data['senha'];
+
+    if ($nome === '' || $email === '' || $senha === '') {
+        responder(400, ['erro' => 'Todos os campos são obrigatórios']);
+    }
+
+    if (strlen($senha) < 6) {
+        responder(400, ['erro' => 'Password deve ter pelo menos 6 caracteres']);
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        responder(400, ['erro' => 'Email inválido']);
+    }
+
+    $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+
+    try {
+        $stmt = $conn->prepare('INSERT INTO utilizadores (nome, email, password_hash) VALUES (?, ?, ?)');
+        $stmt->execute([$nome, $email, $senha_hash]);
+        $utilizador_id = $conn->lastInsertId();
+
+        if (isset($data['preferencias']) && is_array($data['preferencias']) && count($data['preferencias']) > 0) {
+            $stmt_pref = $conn->prepare('INSERT INTO preferencias_utilizador (utilizador_id, tipo, valor) VALUES (?, ?, ?)');
+            $tipo = 'mood';
+
+            foreach ($data['preferencias'] as $pref) {
+                $valor = trim((string) $pref);
+                if ($valor === '') {
+                    continue;
+                }
+                $stmt_pref->execute([$utilizador_id, $tipo, $valor]);
+            }
+        }
+
+        responder(201, ['mensagem' => 'Usuário cadastrado com sucesso!']);
+    } catch (PDOException $e) {
+        if ($e->getCode() == 23000) { // Duplicate entry
+            responder(409, ['erro' => 'Este email já está registado']);
+        }
+        responder(500, ['erro' => 'Erro de base de dados: ' . $e->getMessage()]);
+    }

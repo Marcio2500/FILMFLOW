@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmflow — Entrar</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+  <div class="login-wrap">
+    <div class="login-bg" id="login-bg"></div>
+    <div class="login-overlay"></div>
+
+    <div class="login-card">
+      <div class="login-logo">
+        <span style="color:#e5181b">FILM</span><span style="color:#fff">FLOW</span>
+      </div>
+      <div class="login-tagline">Descobre o que Portugal está a ver</div>
+
+      <div class="login-tabs">
+        <button class="login-tab active" onclick="switchTab('entrar')">Entrar</button>
+        <button class="login-tab" onclick="switchTab('registar')">Criar conta</button>
+      </div>
+
+      <!-- ENTRAR -->
+      <div id="form-entrar">
+        <div class="field">
+          <label class="field-label">Email</label>
+          <input class="input" type="email" id="login-email" placeholder="o teu email">
+        </div>
+        <div class="field">
+          <label class="field-label">Password</label>
+          <input class="input" type="password" id="login-password" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;margin-top:0.25rem" onclick="fazerLogin()">Entrar</button>
+        <p id="msg-login" style="font-size:0.82rem;margin-top:0.75rem;min-height:1.2rem"></p>
+      </div>
+
+      <!-- CRIAR CONTA -->
+      <div id="form-registar" style="display:none">
+        <div class="field">
+          <label class="field-label">Nome</label>
+          <input class="input" type="text" id="reg-nome" placeholder="o teu nome">
+        </div>
+        <div class="field">
+          <label class="field-label">Email</label>
+          <input class="input" type="email" id="reg-email" placeholder="o teu email">
+        </div>
+        <div class="field">
+          <label class="field-label">Password</label>
+          <input class="input" type="password" id="reg-password" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;margin-top:0.25rem" onclick="fazerRegisto()">Criar conta</button>
+        <p id="msg-registo" style="font-size:0.82rem;margin-top:0.75rem;min-height:1.2rem"></p>
+      </div>
+
+      <div class="login-hint">
+        Depois de entrares, o Flow vai ajudar-te a encontrar o filme certo 🎬
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .login-page { overflow: hidden; height: 100vh; }
+
+    .login-wrap {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-bg {
+      position: absolute; inset: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 4px;
+      opacity: 0.15;
+      filter: blur(3px);
+      transform: scale(1.05);
+    }
+
+    .login-poster { border-radius: 4px; background: #1a1a24; }
+    .login-poster:nth-child(odd)  { background: #1e1824; }
+    .login-poster:nth-child(3n)   { background: #241818; }
+    .login-poster:nth-child(4n)   { background: #181e24; }
+
+    .login-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.88) 100%);
+    }
+
+    .login-card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 400px;
+      padding: 2.5rem;
+      background: rgba(10,10,12,0.75);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+    }
+
+    .login-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      letter-spacing: 4px;
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .login-tagline {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      letter-spacing: 0.5px;
+      margin-bottom: 2rem;
+    }
+
+    .login-tabs {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 3px;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-tab {
+      flex: 1;
+      padding: 0.45rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: transparent;
+      color: rgba(255,255,255,0.35);
+      transition: all 0.2s;
+    }
+
+    .login-tab.active {
+      background: #e5181b;
+      color: #fff;
+    }
+
+    .field { margin-bottom: 1rem; }
+
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.35rem;
+    }
+
+    .input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.65rem 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input:focus { border-color: rgba(229,24,27,0.5); }
+    .input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .login-hint {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .msg-error   { color: #ff6b6b; }
+    .msg-success { color: #4ade80; }
+  </style>
+  <script src="tmdb.js"></script>
+
+  <script>
+    const API = 'http://localhost:8001';
+
+    // Gerar posters background
+    const bg = document.getElementById('login-bg');
+  const FILMES_BG = ['Oppenheimer','Dune Part Two','Alien Romulus','Gladiador II','Poor Things','Deadpool Wolverine','Furiosa','Past Lives','The Bear','Shogun','Barbie','Avatar'];
+
+async function preencherFundo() {
+  for (let i = 0; i < 24; i++) {
+    const el = document.createElement('div');
+    el.className = 'login-poster';
+    bg.appendChild(el);
+    const titulo = FILMES_BG[i % FILMES_BG.length];
+    const poster = await getTMDBPoster(titulo);
+    if (poster) {
+      el.style.backgroundImage = `url(${poster})`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+    }
+  }
+}
+
+preencherFundo();
+
+    function switchTab(tab) {
+      document.querySelectorAll('.login-tab').forEach((t, i) => {
+        t.classList.toggle('active', (i===0 && tab==='entrar') || (i===1 && tab==='registar'));
+      });
+      document.getElementById('form-entrar').style.display   = tab==='entrar'   ? 'block' : 'none';
+      document.getElementById('form-registar').style.display = tab==='registar' ? 'block' : 'none';
+    }
+
+    function fazerLogin() {
+      const email    = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const msg      = document.getElementById('msg-login');
+
+      if (!email || !password) {
+        msg.className = 'msg-error';
+        msg.textContent = 'Preenche todos os campos.';
+        return;
+      }
+
+      fetch(`${API}/login.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.mensagem) {
+          sessionStorage.setItem('utilizador', email);
+          window.location.href = 'index.html';
+        } else {
+          msg.className = 'msg-error';
+          msg.textContent = data.erro || 'Credenciais inválidas.';
+        }
+      })
+      .catch(() => {
+        // Demo sem API
+        sessionStorage.setItem('utilizador', email);
+        window.location.href = 'index.html';
+      });
+    }
+
+    function fazerRegisto() {
+      const nome     = document.getElementById('reg-nome').value;
+      const email    = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const msg      = document.getElementById('msg-registo');
+
+      if (!nome || !email || !password) {
+        msg.className = 'msg-error';
+        msg.textContent = 'Preenche todos os campos.';
+        return;
+      }
+
+      fetch(`${API}/registar.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, email, senha: password })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.mensagem) {
+          msg.className = 'msg-success';
+          msg.textContent = 'Conta criada! Podes entrar agora.';
+          setTimeout(() => switchTab('entrar'), 1500);
+        } else {
+          msg.className = 'msg-error';
+          msg.textContent = data.erro || 'Erro ao criar conta.';
+        }
+      })
+      .catch(() => {
+        msg.className = 'msg-error';
+        msg.textContent = 'Sem ligação ao servidor.';
+      });
+    }
+
+  </script>
+  <script src="chatbot-widget.js"></script>
+  
+
+</body>
+</html>

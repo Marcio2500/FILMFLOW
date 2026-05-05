@@ -14,11 +14,11 @@
       <span class="film">FILM</span><span class="flow">FLOW</span>
     </a>
     <ul class="navbar-links">
-      <li><a href="#hero" class="active">Início</a></li>
-      <li><a href="#mapa">Mapa</a></li>
-      <li><a href="#parati">Para Ti</a></li>
-      <li><a href="#tendencias">Tendências</a></li>
-    </ul>
+  <li><a href="index.html" class="active">Início</a></li>
+  <li><a href="mapa.html">Mapa</a></li>
+  <li><a href="para ti.html">Para Ti</a></li>
+  <li><a href="tendencias.html">Tendências</a></li>
+</ul>
     <a href="login.html" class="btn-entrar">Entrar</a>
   </nav>
 
@@ -75,6 +75,7 @@
           </div>
         </div>
       </div>`).join('');
+      setTimeout(() => preencherPosters('.film-card', '.film-card-title'), 500);
 
     // Navbar active no scroll
     window.addEventListener('scroll', () => {
@@ -90,9 +91,11 @@
     });
 
     function toggleChat() {
-      alert('Chatbot em breve!');
+      window.location.href = 'chatbot.html';
     }
   </script>
+  <script src="chatbot-widget.js"></script>
+  <script src="tmdb.js"></script>
 
 </body>
 </html>

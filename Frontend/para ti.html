@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmflow — Para Ti</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+      <span class="film">FILM</span><span class="flow">FLOW</span>
+    </a>
+    <ul class="navbar-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="mapa.html">Mapa</a></li>
+      <li><a href="para ti.html" class="active">Para Ti</a></li>
+      <li><a href="tendencias.html">Tendências</a></li>
+    </ul>
+    <a href="login.html" class="btn-entrar">Entrar</a>
+  </nav>
+
+  <div class="section">
+    <h2 class="section-title">PARA TI</h2>
+    <p class="section-desc">Baseado no teu mood</p>
+
+    <!-- MOOD SELECTOR -->
+    <div class="mood-header">
+      <h3 class="mood-label">Mood mood</h3>
+      <button class="limpar-btn" id="limpar-btn" onclick="limparMood()" style="display:none">Limpar seleção</button>
+    </div>
+
+    <div class="mood-grid">
+      <div class="mood-card" onclick="selectMood(this,'chill')" data-mood="chill">
+        <div class="mood-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+        </div>
+        <span class="mood-name">Chill</span>
+      </div>
+      <div class="mood-card" onclick="selectMood(this,'intenso')" data-mood="intenso">
+        <div class="mood-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <span class="mood-name">Intenso</span>
+      </div>
+      <div class="mood-card" onclick="selectMood(this,'romantico')" data-mood="romantico">
+        <div class="mood-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <span class="mood-name">Romântico</span>
+      </div>
+      <div class="mood-card" onclick="selectMood(this,'misterio')" data-mood="misterio">
+        <div class="mood-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 10a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 16v2"/></svg>
+        </div>
+        <span class="mood-name">Mistério</span>
+      </div>
+      <div class="mood-card" onclick="selectMood(this,'surpresa')" data-mood="surpresa">
+        <div class="mood-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        </div>
+        <span class="mood-name">Surpreende-me</span>
+      </div>
+    </div>
+
+    <!-- ESTADO VAZIO -->
+    <div class="mood-empty" id="mood-empty">
+      <div class="mood-empty-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+      </div>
+      <p>Seleciona um mood para descobrir recomendações personalizadas</p>
+    </div>
+
+    <!-- RECOMENDAÇÕES -->
+    <div id="recs-section" style="display:none">
+      <h3 class="recs-title">Recomendações para o mood: <span id="recs-mood-name"></span></h3>
+      <div class="recs-grid" id="recs-grid"></div>
+    </div>
+  </div>
+
+  <style>
+    .mood-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .mood-label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .limpar-btn {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.5);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: color 0.2s;
+    }
+
+    .limpar-btn:hover { color: #fff; }
+
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .mood-card {
+      background: #1a1a1f;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mood-card:hover {
+      border-color: rgba(255,255,255,0.2);
+      background: #222228;
+    }
+
+    .mood-card.selected {
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      border-color: transparent;
+    }
+
+    .mood-icon { color: rgba(255,255,255,0.5); transition: color 0.2s; }
+    .mood-card.selected .mood-icon { color: #fff; }
+    .mood-card:hover .mood-icon { color: rgba(255,255,255,0.8); }
+
+    .mood-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      transition: color 0.2s;
+    }
+
+    .mood-card.selected .mood-name { color: #fff; }
+    .mood-card:hover .mood-name { color: #fff; }
+
+    /* ESTADO VAZIO */
+    .mood-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 4rem 0;
+    }
+
+    .mood-empty-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mood-empty p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+    }
+
+    /* RECOMENDAÇÕES */
+    .recs-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.2rem;
+    }
+
+    .recs-title span { color: #e5181b; }
+
+    .recs-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+    }
+
+    .rec-card {
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .rec-card:hover { transform: translateY(-4px); }
+
+    .rec-poster {
+      width: 100%;
+      aspect-ratio: 2/3;
+      background: #1a1a1f;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .rec-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      color: #fff;
+    }
+
+    .rec-badge.hot      { background: #e5181b; }
+    .rec-badge.trending { background: #2563eb; }
+
+    .rec-body { padding: 0.6rem 0; }
+    .rec-title { font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rec-genre { font-size: 0.72rem; color: rgba(255,255,255,0.4); }
+  </style>
+
+  <script>
+    const RECS = {
+      chill: [
+        { t:'Poor Things',         g:'Drama · Fantasia · 2023',  badge:'hot'      },
+        { t:'Past Lives',          g:'Drama · Romance · 2023',   badge:'trending' },
+        { t:'The Holdovers',       g:'Comédia · Drama · 2023',   badge:null       },
+        { t:'All of Us Strangers', g:'Drama · Romance · 2023',   badge:null       },
+        { t:'Aftersun',            g:'Drama · 2022',             badge:null       },
+      ],
+      intenso: [
+        { t:'Alien: Romulus',      g:'Terror · Sci-Fi · 2024',   badge:'hot'      },
+        { t:'Gladiador II',        g:'Ação · Drama · 2024',      badge:'trending' },
+        { t:'Dune: Part Two',      g:'Ficção Científica · 2024', badge:'trending' },
+        { t:'Oppenheimer',         g:'Drama · História · 2023',  badge:'hot'      },
+        { t:'Furiosa',             g:'Ação · Aventura · 2024',   badge:null       },
+      ],
+      romantico: [
+        { t:'Past Lives',          g:'Drama · Romance · 2023',   badge:'hot'      },
+        { t:'All of Us Strangers', g:'Drama · Romance · 2023',   badge:'trending' },
+        { t:'Poor Things',         g:'Drama · Fantasia · 2023',  badge:null       },
+        { t:'The Idea of You',     g:'Romance · Comédia · 2024', badge:null       },
+        { t:'Anyone But You',      g:'Comédia · Romance · 2023', badge:null       },
+      ],
+      misterio: [
+        { t:'Oppenheimer',         g:'Drama · História · 2023',  badge:'hot'      },
+        { t:'Dune: Part Two',      g:'Ficção Científica · 2024', badge:'trending' },
+        { t:'Alien: Romulus',      g:'Terror · Sci-Fi · 2024',   badge:'trending' },
+        { t:'The Zone of Interest',g:'Drama · Guerra · 2023',    badge:null       },
+        { t:'Memory',              g:'Thriller · 2023',          badge:null       },
+      ],
+      surpresa: [
+        { t:'Poor Things',         g:'Drama · Fantasia · 2023',  badge:'hot'      },
+        { t:'Past Lives',          g:'Drama · Romance · 2023',   badge:null       },
+        { t:'Dune: Part Two',      g:'Ficção Científica · 2024', badge:'trending' },
+        { t:'Gladiador II',        g:'Ação · Drama · 2024',      badge:null       },
+        { t:'Alien: Romulus',      g:'Terror · Sci-Fi · 2024',   badge:'hot'      },
+      ],
+    };
+
+    const MOOD_NOMES = {
+      chill:     'Chill',
+      intenso:   'Intenso',
+      romantico: 'Romântico',
+      misterio:  'Mistério',
+      surpresa:  'Surpreende-me',
+    };
+
+    let moodAtivo = null;
+
+    function selectMood(el, mood) {
+      // Se já está selecionado, limpar
+      if (moodAtivo === mood) { limparMood(); return; }
+
+      document.querySelectorAll('.mood-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      moodAtivo = mood;
+
+      document.getElementById('limpar-btn').style.display = 'block';
+      document.getElementById('mood-empty').style.display = 'none';
+
+      // Render recs
+      const filmes = RECS[mood] || [];
+      document.getElementById('recs-mood-name').textContent = MOOD_NOMES[mood];
+      document.getElementById('recs-grid').innerHTML = filmes.map(f => `
+        <div class="rec-card">
+          <div class="rec-poster">
+            ${f.badge ? `<span class="rec-badge ${f.badge}">${f.badge === 'hot' ? 'Hot' : 'Trending'}</span>` : ''}
+          </div>
+          <div class="rec-body">
+            <div class="rec-title">${f.t}</div>
+            <div class="rec-genre">${f.g}</div>
+          </div>
+        </div>`).join('');
+
+      document.getElementById('recs-section').style.display = 'block';
+
+      // Guardar mood na sessão
+      sessionStorage.setItem('mood', mood);
+      setTimeout(() => preencherPosters('.rec-card', '.rec-title'), 500);
+    }
+
+    function limparMood() {
+      document.querySelectorAll('.mood-card').forEach(c => c.classList.remove('selected'));
+      moodAtivo = null;
+      document.getElementById('limpar-btn').style.display = 'none';
+      document.getElementById('recs-section').style.display = 'none';
+      document.getElementById('mood-empty').style.display = 'flex';
+      sessionStorage.removeItem('mood');
+    }
+
+    // Restaurar mood da sessão
+    const moodGuardado = sessionStorage.getItem('mood');
+    if (moodGuardado) {
+      const card = document.querySelector(`[data-mood="${moodGuardado}"]`);
+      if (card) selectMood(card, moodGuardado);
+    }
+  </script>
+  <script src="chatbot-widget.js"></script>
+  <script src="tmdb.js"></script>
+
+</body>
+</html>
