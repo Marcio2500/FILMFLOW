@@ -10,15 +10,15 @@
 
   <!-- NAVBAR -->
   <nav class="navbar">
-    <a href="#hero" class="navbar-logo">
+    <a href="index.html" class="navbar-logo">
       <span class="film">FILM</span><span class="flow">FLOW</span>
     </a>
     <ul class="navbar-links">
-  <li><a href="index.html" class="active">Início</a></li>
-  <li><a href="mapa.html">Mapa</a></li>
-  <li><a href="para ti.html">Para Ti</a></li>
-  <li><a href="tendencias.html">Tendências</a></li>
-</ul>
+      <li><a href="index.html" class="active">Início</a></li>
+      <li><a href="mapa.html">Mapa</a></li>
+      <li><a href="recomendacoes.html">Para Ti</a></li>
+      <li><a href="tendencias.html">Tendências</a></li>
+    </ul>
     <a href="login.html" class="btn-entrar">Entrar</a>
   </nav>
 
@@ -32,7 +32,7 @@
       </h1>
       <p class="hero-sub">Tendências reais, por cidade, por mood — atualizado diariamente.</p>
       <div class="hero-btns">
-        <a href="#tendencias" class="btn-primary">Ver Tendências</a>
+        <a href="tendencias.html" class="btn-primary">Ver Tendências</a>
         <button class="btn-outline" onclick="toggleChat()">Fala com o Flow</button>
       </div>
     </div>
@@ -42,7 +42,7 @@
   <section id="destaques" class="section">
     <div class="section-header">
       <h2 class="section-title">PORTUGAL EM ALTA</h2>
-      <a href="#mapa" class="section-link">Ver mapa completo ↗</a>
+      <a href="mapa.html" class="section-link">Ver mapa completo ↗</a>
     </div>
     <div class="cards-grid" id="cards-grid"></div>
   </section>
@@ -54,16 +54,111 @@
     <a href="mapa.html" class="btn-primary">Explorar Mapa Interativo</a>
   </div>
 
+  <!-- MODAL TRAILER -->
+  <div class="trailer-overlay" id="trailer-overlay" onclick="fecharTrailer()">
+    <div class="trailer-modal" onclick="event.stopPropagation()">
+      <button class="trailer-close" onclick="fecharTrailer()">✕</button>
+      <div class="trailer-title" id="trailer-title"></div>
+      <div class="trailer-player">
+        <iframe id="trailer-iframe" frameborder="0" allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .trailer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+    .trailer-overlay.open { display: flex; }
+    .trailer-modal {
+      background: #111116;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 800px;
+      position: relative;
+    }
+    .trailer-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255,255,255,0.08);
+      border: none;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .trailer-close:hover { background: #e5181b; }
+    .trailer-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: #fff;
+      margin-bottom: 1rem;
+      padding-right: 2rem;
+    }
+    .trailer-player {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    .trailer-player iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+    }
+
+    .mapa-banner {
+      margin: 0 2.5rem 3rem;
+      background: #111116;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 2.5rem;
+    }
+    .mapa-banner h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 1.5px;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .mapa-banner p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 1.5rem;
+      max-width: 480px;
+    }
+  </style>
+
+  <script src="tmdb.js"></script>
   <script>
     const FILMES = [
-      { t:'Alien: Romulus',      g:'Terror · Sci-Fi · 2024',   c:32, cidades:['Lisboa','Porto','Braga']   },
-      { t:'Oppenheimer',         g:'Drama · História · 2023',  c:28, cidades:['Lisboa','Porto']            },
-      { t:'Dune: Part Two',      g:'Ficção Científica · 2024', c:21, cidades:['Faro','Coimbra','Évora']   },
-      { t:'Gladiador II',        g:'Ação · Drama · 2024',      c:18, cidades:['Braga','Setúbal']          },
+      { t:'Alien: Romulus',      g:'Terror · Sci-Fi · 2024',   c:32, cidades:['Lisboa','Porto','Braga']  },
+      { t:'Oppenheimer',         g:'Drama · História · 2023',  c:28, cidades:['Lisboa','Porto']           },
+      { t:'Dune: Part Two',      g:'Ficção Científica · 2024', c:21, cidades:['Faro','Coimbra','Évora']  },
+      { t:'Gladiador II',        g:'Ação · Drama · 2024',      c:18, cidades:['Braga','Setúbal']         },
     ];
 
     document.getElementById('cards-grid').innerHTML = FILMES.map(f => `
-      <div class="film-card">
+      <div class="film-card" onclick="abrirTrailer('${f.t}')">
         <div class="film-card-poster">
           <span class="film-card-badge">↗ +${f.c}%</span>
         </div>
@@ -75,27 +170,44 @@
           </div>
         </div>
       </div>`).join('');
-      setTimeout(() => preencherPosters('.film-card', '.film-card-title'), 500);
 
-    // Navbar active no scroll
+    setTimeout(() => preencherPosters('.film-card', '.film-card-title'), 500);
+
+    async function abrirTrailer(titulo) {
+      document.getElementById('trailer-title').textContent = titulo;
+      document.getElementById('trailer-iframe').src = '';
+      document.getElementById('trailer-overlay').classList.add('open');
+      const key = await getTrailer(titulo);
+      if (key) {
+        document.getElementById('trailer-iframe').src =
+          `https://www.youtube.com/embed/${key}?autoplay=1`;
+      } else {
+        document.getElementById('trailer-title').textContent = titulo + ' — Trailer não disponível';
+      }
+    }
+
+    function fecharTrailer() {
+      document.getElementById('trailer-overlay').classList.remove('open');
+      document.getElementById('trailer-iframe').src = '';
+    }
+
+    function toggleChat() {
+      // o widget já está na página
+    }
+
     window.addEventListener('scroll', () => {
-      const sections = ['hero','destaques','mapa','parati','tendencias'];
+      const sections = ['hero','destaques','mapa'];
       let current = 'hero';
       sections.forEach(id => {
         const el = document.getElementById(id);
         if (el && window.scrollY >= el.offsetTop - 80) current = id;
       });
       document.querySelectorAll('.navbar-links a').forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+        a.classList.toggle('active', a.getAttribute('href') === 'index.html');
       });
     });
-
-    function toggleChat() {
-      window.location.href = 'chatbot.html';
-    }
   </script>
   <script src="chatbot-widget.js"></script>
-  <script src="tmdb.js"></script>
 
 </body>
 </html>

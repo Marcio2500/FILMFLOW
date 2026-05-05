@@ -30,3 +30,27 @@ async function preencherPosters(seletor, campoTitulo) {
     }
   }
 }
+async function getTrailer(titulo) {
+  try {
+    // Primeiro busca o ID do filme
+    const search = await fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(titulo)}&language=pt-PT`
+    );
+    const searchData = await search.json();
+    if (!searchData.results[0]) return null;
+    
+    const movieId = searchData.results[0].id;
+
+    // Depois busca os vídeos
+    const videos = await fetch(
+      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${TMDB_KEY}`
+    );
+    const videosData = await videos.json();
+    
+    const trailer = videosData.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+    return trailer ? trailer.key : null;
+
+  } catch {
+    return null;
+  }
+}
