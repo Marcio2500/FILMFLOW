@@ -158,7 +158,7 @@
     ];
 
     document.getElementById('cards-grid').innerHTML = FILMES.map(f => `
-      <div class="film-card" onclick="abrirTrailer('${f.t}')">
+      <div class="film-card" onclick="abrirFilme('${f.t}')">
         <div class="film-card-poster">
           <span class="film-card-badge">↗ +${f.c}%</span>
         </div>
@@ -207,6 +207,7 @@
       });
     });
   </script>
+  <script src="filme-modal.js"></script>
   <script src="chatbot-widget.js"></script>
 
 </body>

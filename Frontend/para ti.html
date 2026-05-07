@@ -292,7 +292,7 @@
       const filmes = RECS[mood] || [];
       document.getElementById('recs-mood-name').textContent = MOOD_NOMES[mood];
       document.getElementById('recs-grid').innerHTML = filmes.map(f => `
-        <div class="rec-card">
+        <div class="rec-card" onclick="abrirFilme('${f.t}')">
           <div class="rec-poster">
             ${f.badge ? `<span class="rec-badge ${f.badge}">${f.badge === 'hot' ? 'Hot' : 'Trending'}</span>` : ''}
           </div>
@@ -327,6 +327,7 @@
   </script>
   <script src="chatbot-widget.js"></script>
   <script src="tmdb.js"></script>
+  <script src="filme-modal.js"></script>
 
 </body>
 </html>
