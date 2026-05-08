@@ -19,7 +19,20 @@
       <li><a href="recomendacoes.html">Para Ti</a></li>
       <li><a href="tendencias.html">Tendências</a></li>
     </ul>
-    <a href="login.html" class="btn-entrar">Entrar</a>
+    <div class="navbar-spacer"></div>
+    <div class="search-wrap" id="search-wrap">
+      <button class="search-icon-btn" onclick="toggleSearch()" id="search-icon-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+      <div class="search-input-wrap" id="search-input-wrap" style="display:none">
+        <input class="search-input" id="search-input" placeholder="Pesquisar filmes..." autocomplete="off">
+        <button class="search-close" onclick="fecharSearch()">✕</button>
+      </div>
+      <div class="search-results" id="search-results"></div>
+    </div>
+    <a href="login.html" class="btn-entrar" id="btn-entrar">Entrar</a>
   </nav>
 
   <!-- HERO -->
@@ -54,77 +67,99 @@
     <a href="mapa.html" class="btn-primary">Explorar Mapa Interativo</a>
   </div>
 
-  <!-- MODAL TRAILER -->
-  <div class="trailer-overlay" id="trailer-overlay" onclick="fecharTrailer()">
-    <div class="trailer-modal" onclick="event.stopPropagation()">
-      <button class="trailer-close" onclick="fecharTrailer()">✕</button>
-      <div class="trailer-title" id="trailer-title"></div>
-      <div class="trailer-player">
-        <iframe id="trailer-iframe" frameborder="0" allowfullscreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-        </iframe>
-      </div>
-    </div>
-  </div>
-
   <style>
-    .trailer-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 9999;
-      display: none;
+    .navbar-spacer { flex: 1; }
+
+    .search-wrap { position: relative; }
+
+    .search-icon-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      padding: 0.3rem;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(6px);
+      transition: color 0.2s;
+      margin-right: 0.75rem;
     }
-    .trailer-overlay.open { display: flex; }
-    .trailer-modal {
-      background: #111116;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 1.5rem;
-      width: 90%;
-      max-width: 800px;
-      position: relative;
+    .search-icon-btn:hover { color: #fff; }
+
+    .search-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: 0.35rem 0.75rem;
+      margin-right: 0.75rem;
     }
-    .trailer-close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(255,255,255,0.08);
+
+    .search-input {
+      background: none;
       border: none;
       color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      width: 200px;
+    }
+    .search-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .search-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.4);
       cursor: pointer;
       font-size: 0.9rem;
-      transition: all 0.2s;
+      padding: 0;
+      transition: color 0.2s;
     }
-    .trailer-close:hover { background: #e5181b; }
-    .trailer-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.5rem;
-      letter-spacing: 2px;
-      color: #fff;
-      margin-bottom: 1rem;
-      padding-right: 2rem;
-    }
-    .trailer-player {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 8px;
-    }
-    .trailer-player iframe {
+    .search-close:hover { color: #fff; }
+
+    .search-results {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 8px;
+      top: calc(100% + 0.75rem);
+      right: 0;
+      width: 320px;
+      background: #111116;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      display: none;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      z-index: 200;
     }
+    .search-results.open { display: block; }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: rgba(255,255,255,0.05); }
+
+    .search-result-poster {
+      width: 36px;
+      height: 50px;
+      border-radius: 4px;
+      object-fit: cover;
+      background: #1a1a22;
+      flex-shrink: 0;
+    }
+
+    .search-result-info { flex: 1; min-width: 0; }
+    .search-result-title { font-size: 0.88rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .search-result-meta { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+    .search-loading { padding: 1rem; text-align: center; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
+    .search-empty   { padding: 1rem; text-align: center; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
 
     .mapa-banner {
       margin: 0 2.5rem 3rem;
@@ -173,28 +208,71 @@
 
     setTimeout(() => preencherPosters('.film-card', '.film-card-title'), 500);
 
-    async function abrirTrailer(titulo) {
-      document.getElementById('trailer-title').textContent = titulo;
-      document.getElementById('trailer-iframe').src = '';
-      document.getElementById('trailer-overlay').classList.add('open');
-      const key = await getTrailer(titulo);
-      if (key) {
-        document.getElementById('trailer-iframe').src =
-          `https://www.youtube.com/embed/${key}?autoplay=1`;
-      } else {
-        document.getElementById('trailer-title').textContent = titulo + ' — Trailer não disponível';
+    function toggleChat() {}
+
+    // ── PESQUISA ──────────────────────────────
+    let searchTimeout = null;
+
+    function toggleSearch() {
+      document.getElementById('search-input-wrap').style.display = 'flex';
+      document.getElementById('search-icon-btn').style.display   = 'none';
+      document.getElementById('btn-entrar').style.display        = 'none';
+      document.getElementById('search-input').focus();
+    }
+
+    function fecharSearch() {
+      document.getElementById('search-input-wrap').style.display = 'none';
+      document.getElementById('search-icon-btn').style.display   = 'flex';
+      document.getElementById('btn-entrar').style.display        = 'inline-block';
+      document.getElementById('search-results').classList.remove('open');
+      document.getElementById('search-input').value = '';
+    }
+
+    document.getElementById('search-input').addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      const q = this.value.trim();
+      const results = document.getElementById('search-results');
+
+      if (!q) { results.classList.remove('open'); return; }
+
+      results.classList.add('open');
+      results.innerHTML = '<div class="search-loading">A pesquisar...</div>';
+
+      searchTimeout = setTimeout(async () => {
+        try {
+          const res  = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}&language=pt-PT`);
+          const data = await res.json();
+          const filmes = data.results?.slice(0, 6) || [];
+
+          if (!filmes.length) {
+            results.innerHTML = '<div class="search-empty">Nenhum resultado encontrado.</div>';
+            return;
+          }
+
+          results.innerHTML = filmes.map(f => `
+            <div class="search-result-item" onclick="abrirFilme('${f.title.replace(/'/g, "\\'")}'); fecharSearch();">
+              ${f.poster_path
+                ? `<img src="https://image.tmdb.org/t/p/w92${f.poster_path}" class="search-result-poster" alt="${f.title}">`
+                : `<div class="search-result-poster"></div>`}
+              <div class="search-result-info">
+                <div class="search-result-title">${f.title}</div>
+                <div class="search-result-meta">${f.release_date?.split('-')[0] || ''} · ${f.vote_average?.toFixed(1) || ''}★</div>
+              </div>
+            </div>`).join('');
+
+        } catch {
+          results.innerHTML = '<div class="search-empty">Erro ao pesquisar.</div>';
+        }
+      }, 400);
+    });
+
+    document.addEventListener('click', e => {
+      if (!document.getElementById('search-wrap').contains(e.target)) {
+        fecharSearch();
       }
-    }
+    });
 
-    function fecharTrailer() {
-      document.getElementById('trailer-overlay').classList.remove('open');
-      document.getElementById('trailer-iframe').src = '';
-    }
-
-    function toggleChat() {
-      // o widget já está na página
-    }
-
+    // ── NAVBAR SCROLL ─────────────────────────
     window.addEventListener('scroll', () => {
       const sections = ['hero','destaques','mapa'];
       let current = 'hero';
