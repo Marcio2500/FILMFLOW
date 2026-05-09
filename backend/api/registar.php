@@ -5,8 +5,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json; charset=utf-8');
 
 function responder(int $status, array $payload): void
-{
-    http_response_code($status);
+{    http_response_code($status);
     echo json_encode($payload, JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -19,8 +18,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     responder(405, ['erro' => 'Método não permitido']);
 }
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 try {
     require_once __DIR__ . '/../config/db.php';
@@ -75,3 +72,7 @@ try {
         }
         responder(500, ['erro' => 'Erro de base de dados: ' . $e->getMessage()]);
     }
+} catch (Throwable $e) {
+    responder(500, ['erro' => 'Erro: ' . $e->getMessage()]);
+}
+?>

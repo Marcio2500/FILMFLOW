@@ -15,8 +15,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
     exit;
 }
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
 try {
     require_once __DIR__ . '/../config/db.php';
     // Test connection

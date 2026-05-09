@@ -5,54 +5,53 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
     exit;
 }
 
-include_once '../config/db.php';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['erro' => 'Método não permitido']);
+    exit;
+}
+
+require_once __DIR__ . '/../config/db.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-if (!$data || !isset($data['email']) || !isset($data['password'])) {
+if (!is_array($data) || !isset($data['email'], $data['password'])) {
+    http_response_code(400);
     echo json_encode(['erro' => 'Email e password obrigatórios']);
     exit;
 }
 
-$email = trim($data['email']);
-$password = $data['password'];
+$email = trim((string) ($data['email'] ?? ''));
+$password = (string) ($data['password'] ?? '');
 
-if (empty($email) || empty($password)) {
+if ($email === '' || $password === '') {
+    http_response_code(400);
     echo json_encode(['erro' => 'Email e password obrigatórios']);
     exit;
 }
 
-// Usar prepared statements
 try {
     $stmt = $conn->prepare('SELECT id, nome, password_hash FROM utilizadores WHERE email = ?');
     $stmt->execute([$email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$user) {
+    if (!$user || !password_verify($password, $user['password_hash'])) {
+        http_response_code(401);
         echo json_encode(['erro' => 'Email ou password incorretos']);
         exit;
     }
 
-    if (password_verify($password, $user['password_hash'])) {
-        // Atualizar último login
-        $stmt_login = $conn->prepare('UPDATE utilizadores SET ultimo_login = CURRENT_TIMESTAMP WHERE id = ?');
-        $stmt_login->execute([$user['id']]);
+    $stmt_login = $conn->prepare('UPDATE utilizadores SET ultimo_login = CURRENT_TIMESTAMP WHERE id = ?');
+    $stmt_login->execute([$user['id']]);
 
-        echo json_encode(['mensagem' => 'Login bem-sucedido', 'nome' => $user['nome']]);
-    } else {
-        echo json_encode(['erro' => 'Email ou password incorretos']);
-    }
+    echo json_encode(['mensagem' => 'Login bem-sucedido', 'id' => $user['id'], 'nome' => $user['nome']]);
 } catch (PDOException $e) {
+    http_response_code(500);
     echo json_encode(['erro' => 'Erro de base de dados: ' . $e->getMessage()]);
-}
-    $stmt_login->execute();
-    $stmt_login->close();
-    
-    echo json_encode(['mensagem' => 'Login realizado com sucesso', 'id' => $user['id'], 'nome' => $user['nome']]);
-} else {
-    echo json_encode(['erro' => 'Email ou password incorretos']);
+    exit;
 }
 ?>

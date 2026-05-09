@@ -9,6 +9,6 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch (PDOException $e) {
-    die(json_encode(["erro" => "Erro de conexão: " . $e->message]));
+    die(json_encode(["erro" => "Erro de conexão: " . $e->getMessage()]));
 }
 ?>
